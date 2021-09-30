@@ -1,0 +1,15 @@
+// Rooms and room cards
+// Lost In Space theme : Resolute
+Room, Jupiter 02, J
+Room, Bridge, B
+Room, Cafeteria, C
+Room, Storage, S
+Room, Engine Room, E
+Room, Classroom, Cl
+Room, Office, O
+Room, Maintenance Deck, M
+Room, MedBay, MB
+
+// Other spaces on board
+Space, Unused, X
+Space, Walkway, W
