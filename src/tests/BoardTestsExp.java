@@ -63,5 +63,83 @@ public class BoardTestsExp {
 		Assert.assertEquals(3, testList.size());
 	}
 	
+	
+	@Test
+	//Test target creation for different start locations and rolls
+	public void testTargetsNormalTopLeft() {
+		TestBoardCell cell = board.getCell(0, 0);
+		//one step
+		board.calcTargets(cell, 1);
+		Set<TestBoardCell> targets = board.getTargets();
+		Assert.assertEquals(6,  targets.size());
+		//test different locations for having targets
+		Assert.assertTrue(targets.contains(board.getCell(3, 0)));
+		Assert.assertTrue(targets.contains(board.getCell(2, 1)));
+		Assert.assertTrue(targets.contains(board.getCell(0, 1)));
+		Assert.assertTrue(targets.contains(board.getCell(0, 3)));
+		Assert.assertTrue(targets.contains(board.getCell(1, 2)));
+		Assert.assertTrue(targets.contains(board.getCell(1, 0)));
+	}
+	
+	@Test
+	public void testTargetsNormalBottomRight() {
+		TestBoardCell cell = board.getCell(3, 3);
+		//two step
+		board.calcTargets(cell, 2);
+		Set<TestBoardCell> targets = board.getTargets();
+		Assert.assertEquals(6,  targets.size());
+		//test different locations for having targets
+		Assert.assertTrue(targets.contains(board.getCell(3, 0)));
+		Assert.assertTrue(targets.contains(board.getCell(2, 1)));
+		Assert.assertTrue(targets.contains(board.getCell(0, 1)));
+		Assert.assertTrue(targets.contains(board.getCell(0, 3)));
+		Assert.assertTrue(targets.contains(board.getCell(1, 2)));
+		Assert.assertTrue(targets.contains(board.getCell(1, 0)));
+	}
+	
+	@Test
+	public void testTargetsNormalLeftEdge() {
+		TestBoardCell cell = board.getCell(0, 2);
+		//three step
+		board.calcTargets(cell, 3);
+		Set<TestBoardCell> targets = board.getTargets();
+		Assert.assertEquals(6,  targets.size());
+		//test different locations for having targets
+		Assert.assertTrue(targets.contains(board.getCell(3, 0)));
+		Assert.assertTrue(targets.contains(board.getCell(2, 1)));
+		Assert.assertTrue(targets.contains(board.getCell(0, 1)));
+		Assert.assertTrue(targets.contains(board.getCell(0, 3)));
+		Assert.assertTrue(targets.contains(board.getCell(1, 2)));
+		Assert.assertTrue(targets.contains(board.getCell(1, 0)));
+	}
+	
+	@Test
+	public void testTargetsNormalEmpty() {
+		TestBoardCell cell = board.getCell(0, 0);
+		//dont call calcTargets to leave board empty
+		Set<TestBoardCell> targets = board.getTargets();
+		Assert.assertEquals(6,  targets.size());
+		//test different locations for having targets
+		Assert.assertTrue(targets.contains(board.getCell(3, 0)));
+		Assert.assertTrue(targets.contains(board.getCell(2, 1)));
+		Assert.assertTrue(targets.contains(board.getCell(0, 1)));
+		Assert.assertTrue(targets.contains(board.getCell(0, 3)));
+		Assert.assertTrue(targets.contains(board.getCell(1, 2)));
+		Assert.assertTrue(targets.contains(board.getCell(1, 0)));
+	}
+	
+	@Test
+	//tests targets with rooms and another occupied
+	public void testTargetsMixed() {
+		board.getCell(3, 3).setOccupied(true);
+		board.getCell(0, 0).setIsRoom(true);
+		TestBoardCell cell = board.getCell(0,1);
+		board.calcTargets(cell, 3);
+		Set<TestBoardCell> targets = board.getTargets();
+		Assert.assertEquals(3, targets.size());
+		Assert.assertTrue(targets.contains(board.getCell(1, 1)));
+		Assert.assertTrue(targets.contains(board.getCell(2, 2)));
+		Assert.assertTrue(targets.contains(board.getCell(3, 2)));
+	}	
 
 }
