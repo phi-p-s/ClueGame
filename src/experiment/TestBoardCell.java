@@ -1,6 +1,7 @@
 package experiment;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 public class TestBoardCell {
@@ -14,18 +15,18 @@ public class TestBoardCell {
 	
 	public TestBoardCell(int row, int column) {
 		super();
+		this.adjList = new HashSet<TestBoardCell>();
 		this.row = row;
 		this.column = column;
 	}
 	
 	//method stubs
 	public void addAdjacency(TestBoardCell cell) {
-		
+		adjList.add(cell);
 	}
 	
 	public Set<TestBoardCell> getAdjList() {
-		
-		return Collections.emptySet();
+		return adjList;
 	}
 	
 	public void setRoom(boolean isRoom) {
