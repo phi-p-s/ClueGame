@@ -5,9 +5,19 @@ import java.util.Set;
 
 public class TestBoard {
 	
+	private TestBoardCell[][] grid;
+	private Set<TestBoardCell> targets;
+	private Set<TestBoardCell> visited;
+	
+	final static int COLUMNS = 4;
+	final static int ROWS = 4;
 	//constructor
 	public TestBoard() {
-		
+		for(int r = 0; r < ROWS; r++) {
+			for(int c = 0; c < COLUMNS; c++) {
+				
+			}
+		}
 	}
 	
 	//method stubs
