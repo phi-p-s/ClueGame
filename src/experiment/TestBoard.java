@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+
 public class TestBoard {
 	
 	private TestBoardCell[][] grid;
@@ -42,10 +43,10 @@ public class TestBoard {
 		for(TestBoardCell cell: startCell.getAdjList()) {
 			if(!visited.contains(cell)) {
 				visited.add(cell);
-				if(pathlength == 1) {
+				if(((pathlength == 1) && !cell.getIsOccupied()) || cell.getIsRoom()) {
 					targets.add(cell);
 				}
-				else {
+				else if(!cell.getIsOccupied()){
 					calcTargets(cell, pathlength-1);
 				}
 					visited.remove(cell);
@@ -62,4 +63,14 @@ public class TestBoard {
 		return grid[row][col];
 	}
 	
+	public static void main(String[] args) {
+		TestBoard board = new TestBoard();
+		board.getCell(3, 0).setIsOccupied(true);
+		board.getCell(1, 2).setIsRoom(true);
+		TestBoardCell cell = board.getCell(3,2);
+		board.calcTargets(cell, 4);
+		for(TestBoardCell cellCheck: board.getTargets()) {
+			System.out.println(cellCheck.getRow() + " " + cellCheck.getColumn());
+		}
+	}
 }

@@ -38,20 +38,20 @@ public class TestBoardCell {
 	}
 	
 	
-	public void setRoom(boolean isRoom) {
-		
+	public void setIsRoom(boolean isRoom) {
+		this.isRoom = isRoom;
 	}
 	
-	public void setOccupied(boolean isOccupied) {
-		
+	public void setIsOccupied(boolean isOccupied) {
+		this.isOccupied = isOccupied;
 	}
 	
-	public boolean getOccupied() {
-		return false;
+	public boolean getIsOccupied() {
+		return this.isOccupied;
 	}
 	
-	public boolean setIsRoom(boolean isRoom) {
-		return false;
+	public boolean getIsRoom() {
+		return this.isRoom;
 	}
 	
 }
