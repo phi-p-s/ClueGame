@@ -9,6 +9,14 @@ public class TestBoardCell {
 	//instance variables and constructor
 	private int row;
 	private int column;
+	public int getRow() {
+		return row;
+	}
+
+	public int getColumn() {
+		return column;
+	}
+
 	private boolean isRoom;
 	private boolean isOccupied;
 	Set<TestBoardCell> adjList;
@@ -28,6 +36,7 @@ public class TestBoardCell {
 	public Set<TestBoardCell> getAdjList() {
 		return adjList;
 	}
+	
 	
 	public void setRoom(boolean isRoom) {
 		

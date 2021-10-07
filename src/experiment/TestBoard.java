@@ -1,6 +1,7 @@
 package experiment;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 public class TestBoard {
@@ -16,6 +17,8 @@ public class TestBoard {
 	public TestBoard() {
 		//add TestBoardCell to each spot in the grid
 		grid = new TestBoardCell[ROWS][COLUMNS];
+		visited = new HashSet<TestBoardCell>();
+		targets = new HashSet<TestBoardCell>();
 		for(int r = 0; r < ROWS; r++) {
 			for(int c = 0; c < COLUMNS; c++) {
 				grid[r][c] = new TestBoardCell(r, c);
@@ -35,11 +38,24 @@ public class TestBoard {
 	}
 	
 	public void calcTargets(TestBoardCell startCell, int pathlength) {
+		visited.add(startCell);
+		for(TestBoardCell cell: startCell.getAdjList()) {
+			if(!visited.contains(cell)) {
+				visited.add(cell);
+				if(pathlength == 1) {
+					targets.add(cell);
+				}
+				else {
+					calcTargets(cell, pathlength-1);
+				}
+					visited.remove(cell);
+			}
+		}
 		
 	}
 	
 	public Set<TestBoardCell> getTargets(){
-		return Collections.emptySet();
+		return targets;
 	}
 	
 	public TestBoardCell getCell(int row, int col) {
