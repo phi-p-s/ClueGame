@@ -5,11 +5,10 @@ Room, Bridge, B
 Room, Cafeteria, C
 Room, Storage, S
 Room, Engine Room, E
-Room, Classroom, Cl
+Room, Classroom, R
 Room, Office, O
 Room, Maintenance Deck, M
-Room, MedBay, MB
-
+Room, MedBay, Y
 // Other spaces on board
 Space, Unused, X
 Space, Walkway, W
