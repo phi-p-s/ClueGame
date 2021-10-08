@@ -85,6 +85,6 @@ public class BoardCell {
 		return isSecretPassage;
 	}
 	public Character getSecretPassage() {
-		return null;
+		return '-';
 	}
 }

@@ -1,6 +1,7 @@
 package clueGame;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -10,23 +11,28 @@ public class Board {
 	
 	private BoardCell[][] grid;
 	private Set<BoardCell> targets;
+	private Room temporaryRoom;
 	private Set<BoardCell> visited;
 	private String layoutConfigFile;
 	private String setupConfigFile;
 	private Map<Character, Room> roomMap;
-	final int columns;
-	final int rows;
+	private Map<BoardCell, Room> roomMap2;
+	private int columns;
+	private int rows;
 	//constructor
 	
 	private static Board theInstance = new Board();
 	
 	private Board() {
 		//add TestBoardCell to each spot in the grid
-		this.rows = 0;
-		this.columns = 0;
+		this.rows = 1000;
+		this.columns = 1000;
 		grid = new BoardCell[rows][columns];
 		visited = new HashSet<BoardCell>();
 		targets = new HashSet<BoardCell>();
+		roomMap = new HashMap<Character, Room>();
+		roomMap2 = new HashMap<BoardCell, Room>();
+		temporaryRoom = new Room();
 		for(int r = 0; r < rows; r++) {
 			for(int c = 0; c < columns; c++) {
 				grid[r][c] = new BoardCell(r, c);
@@ -85,10 +91,10 @@ public class Board {
 	}
 	//CELLS & ROOMS
 	public Room getRoom(Character letter) {
-		return null;
+		return temporaryRoom;
 	}
 	public Room getRoom(BoardCell cell) {
-		return null;
+		return temporaryRoom;
 	}
 	public BoardCell getCell(int row, int col) {
 		return grid[row][col];

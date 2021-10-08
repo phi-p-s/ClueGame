@@ -9,6 +9,7 @@ public class Room {
 	
 	public Room() {
 		super();
+		this.name = "-";
 	}
 	
 	//GETTERS AND SETTERS
