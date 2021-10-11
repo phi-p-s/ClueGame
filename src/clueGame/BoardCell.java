@@ -7,17 +7,23 @@ import java.util.Set;
 public class BoardCell {
 
 	//instance variables and constructor
+	//row and column
 	private int row;
 	private int column;
+	
+	//layout related booleans
 	private boolean isRoom;
 	private boolean isOccupied;
 	private boolean isDoorway;
 	private boolean isSecretPassage;
-	private Character letter;
-	private Character secretPassage;
-	private DoorDirection doorDirection;
 	private boolean isLabel;
 	private boolean isCenter;
+	//layout related names
+	private Character letter;
+	private Character secretPassage;
+	//door direction enum
+	private DoorDirection doorDirection;
+	//Adjacent tiles
 	Set<BoardCell> adjList;
 	public BoardCell(int row, int column) {
 		super();
@@ -26,20 +32,28 @@ public class BoardCell {
 		this.column = column;
 	}
 	
-	//method stubs
+	//adds to adjacency list
 	public void addAdjacency(BoardCell cell) {
 		adjList.add(cell);
 	}
 	
+	/*
+	 * GETTERS AND SETTERS
+	 * GETTERS AND SETTERS
+	 * GETTERS AND SETTERS
+	 * GETTERS AND SETTERS
+	 * GETTERS AND SETTERS
+	 * GETTERS AND SETTERS
+	 * GETTERS AND SETTERS
+	 * GETTERS AND SETTERS
+	 */
 	
-	
-	//GETTERS AND SETTERS
-	
-	//ADJ LIST
+	//GET ADJACENCY LIST
 	public Set<BoardCell> getAdjList() {
 		return adjList;
 	}
-	//ISROOM
+	
+	//GETTERS FOR ROOM STATUSES, IS ROOM, IS LABEL, IS CENTER
 	public void setIsRoom(boolean isRoom) {
 		this.isRoom = isRoom;
 	}
@@ -49,7 +63,11 @@ public class BoardCell {
 	public boolean isLabel() {
 		return isLabel;
 	}
-	//sets multiple things, since it takes in the second character from the layout file. Possible values indicate, label, center, or secret passage location
+	public boolean isCenter() {
+		return isCenter;
+	}
+	//sets multiple things, since it takes in the second character from the layout file. 
+	//Possible values indicate, label, center, or secret passage location
 	public void setLabelCenterSecret(Character letter) {
 		if(letter == '#') {
 			this.isLabel = true;
@@ -62,9 +80,14 @@ public class BoardCell {
 			this.isSecretPassage = true;
 		}
 	}
-	public boolean isCenter() {
-		return isCenter;
+	//SECRET PASSAGE
+	public boolean isSecretPassage() {
+		return isSecretPassage;
 	}
+	public Character getSecretPassage() {
+		return secretPassage;
+	}
+	
 	
 	//ISOCCUPIED
 	public void setIsOccupied(boolean isOccupied) {
@@ -73,13 +96,16 @@ public class BoardCell {
 	public boolean isOccupied() {
 		return this.isOccupied;
 	}
-	//IS DOORWAY
+	
+	//DOORWAY GETTERS AND SETTERS, DIRECTION AND BOOLEANS
 	public void setIsDoorway(boolean isDoorway) {
 		this.isDoorway = isDoorway;
 	}
 	public boolean isDoorway() {
 		return this.isDoorway;
 	}
+	
+	//takes character and sets door direction based on which character is given
 	public void setDoorDirection(char direction) {
 		if(direction == 'v') {
 			this.doorDirection = doorDirection.DOWN;
@@ -87,19 +113,17 @@ public class BoardCell {
 		else if(direction == '^') {
 			this.doorDirection = doorDirection.UP;
 		}
-	
 		else if(direction == '<') {
 			this.doorDirection = doorDirection.LEFT;
 		}
 		else {
 			this.doorDirection = doorDirection.RIGHT;
 		}
-		
-		
 	}
 	public DoorDirection getDoorDirection() {
 		return doorDirection;
 	}
+	
 	//ROWS & COLUMNS
 	public int getRow() {
 		return row;
@@ -107,19 +131,15 @@ public class BoardCell {
 	public int getColumn() {
 		return column;
 	}
-	//NAME
+	
+	//LETTERS IN LAYOUT FILE GIVEN TO CELL
 	public void setLetter(Character letter) {
 		this.letter = letter;
 	}
 	public Character getLetter() {
 		return letter;
 	}
-	//SECRET PASSAGE
-	public boolean isSecretPassage() {
-		return isSecretPassage;
-	}
-	public Character getSecretPassage() {
-		return secretPassage;
-	}
+	
+
 	
 }

@@ -16,6 +16,8 @@ public class Room {
 	}
 	
 	//GETTERS AND SETTERS
+	
+	//Name related getters & setters. 
 	public String getName() {
 		return this.name;
 	}

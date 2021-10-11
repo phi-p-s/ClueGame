@@ -58,25 +58,24 @@ public class Board {
 
 	public void initialize() {
 		//add TestBoardCell to each spot in the grid
-		this.rows = 18;
-		this.columns = 29;
-		grid = new BoardCell[rows+1][columns+1];
-		layoutGrid = new String[rows+1][columns+1];
+		this.rows = 19; //add 1 to rows to account for 0-18
+		this.columns = 30; //add 1 to columns to account for 0-29
+		grid = new BoardCell[rows][columns];
+		layoutGrid = new String[rows][columns];
 		visited = new HashSet<BoardCell>();
 		targets = new HashSet<BoardCell>();
 		roomMap = new HashMap<Character, Room>();
 		roomMap2 = new HashMap<BoardCell, Room>();
 
 
-		//load setup and layout files, catch file not found errors
-
+		//load setup file, catch exceptions
 		try {
 			setupReader = new File(setupConfigFile);
-
 		}
 		catch (Exception e) {
 			System.out.println(e);
 		}
+		//load layout file, catch exceptions
 		try {
 			layoutReader = new File(layoutConfigFile);
 
@@ -85,18 +84,17 @@ public class Board {
 			System.out.println(e);
 		}
 
-
+		//setup scanner, catch exceptions
 		try {
 			setupIn = new Scanner(setupReader);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e);
 		}
+		//layout scanner, catch exceptions
 		try {
 			layoutIn = new Scanner(layoutReader);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e);
 		}
 
 
@@ -111,38 +109,43 @@ public class Board {
 			}
 		}
 
-		//temporary iterator
+		//temporary iterator to keep track of rows
 		int i = 0;
 		String temp = layoutIn.nextLine(); //skip first row
 		while(layoutIn.hasNextLine()) {
 			String line = layoutIn.nextLine();
 			String[] value = line.split(",");
+			//start at j = 1 to skip the column that lists which row it is
 			for(int j = 1; j < value.length; j++) {
 				layoutGrid[i][j-1] = value[j];
 			}
-			i++;
+			i++; //increment to next row
 		}
 
 		//creates a grid of cells, size r x c
-		for(int r = 0; r < rows+1; r++) {
-			for(int c = 0; c < columns+1; c++) {
-				grid[r][c] = new BoardCell(r, c);
-				grid[r][c].setLetter(layoutGrid[r][c].charAt(0));
-				if((layoutGrid[r][c].length() == 2) && (layoutGrid[r][c].charAt(0) == 'W')) {
-					if(layoutGrid[r][c].charAt(1) == 'v' || layoutGrid[r][c].charAt(1) == '>' || layoutGrid[r][c].charAt(1) == '<' ||  layoutGrid[r][c].charAt(1) == '^') {
-						grid[r][c].setIsDoorway(true);
-						grid[r][c].setDoorDirection(layoutGrid[r][c].charAt(1));
+		for(int r = 0; r < rows; r++) {
+			for(int c = 0; c < columns; c++) {
+				BoardCell currentCell = grid[r][c];
+				String currentLayout = layoutGrid[r][c];
+				//create cell at current location
+				currentCell = new BoardCell(r, c);
+				//set letter of the new cell to be the first letter given by the layout file
+				currentCell.setLetter(currentLayout.charAt(0));
+				if((layoutGrid[r][c].length() == 2) && (currentLayout.charAt(0) == 'W')) {
+					if(currentLayout.charAt(1) == 'v' || currentLayout.charAt(1) == '>' || currentLayout.charAt(1) == '<' ||  currentLayout.charAt(1) == '^') {
+						currentCell.setIsDoorway(true);
+						currentCell.setDoorDirection(currentLayout.charAt(1));
 					}
 				}
 				//checks for whether its of length 2, then sends second character to check what it means
 				if(layoutGrid[r][c].length() == 2) {
-					grid[r][c].setLabelCenterSecret(layoutGrid[r][c].charAt(1));
+					currentCell.setLabelCenterSecret(currentLayout.charAt(1));
 					//check whether we set it to label/center cell, and then set it to that for the room
-					if(grid[r][c].isLabel()) {
-						getRoom(layoutGrid[r][c].charAt(0)).setLabelCell(grid[r][c]);
+					if(currentCell.isLabel()) {
+						getRoom(currentLayout.charAt(0)).setLabelCell(currentCell);
 					}
-					if(grid[r][c].isCenter()) {
-						getRoom(layoutGrid[r][c].charAt(0)).setCenterCell(grid[r][c]);
+					if(currentCell.isCenter()) {
+						getRoom(currentLayout.charAt(0)).setCenterCell(currentCell);
 					}
 					
 				}
@@ -203,15 +206,4 @@ public class Board {
 		return layoutGrid;
 	}
 
-	/*
-	public static void main(String[] args) {
-		Board board = new Board();
-		board.getCell(3, 0).setIsOccupied(true);
-		board.getCell(1, 2).setIsRoom(true);
-		BoardCell cell = board.getCell(3,2);
-		board.calcTargets(cell, 4);
-		for(BoardCell cellCheck: board.getTargets()) {
-			System.out.println(cellCheck.getRow() + " " + cellCheck.getColumn());
-		}
-	}*/
 }
