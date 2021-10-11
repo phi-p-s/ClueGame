@@ -65,35 +65,8 @@ public class Board {
 		roomMap = new HashMap<Character, Room>();
 		roomMap2 = new HashMap<BoardCell, Room>();
 
-
-		//load setup file, catch exceptions
-		try {
-			setupReader = new File(setupConfigFile);
-		}
-		catch (Exception e) {
-			System.out.println(e);
-		}
-		//load layout file, catch exceptions
-		try {
-			layoutReader = new File(layoutConfigFile);
-
-		}
-		catch (Exception e) {
-			System.out.println(e);
-		}
-
-		//setup scanner, catch exceptions
-		try {
-			setupIn = new Scanner(setupReader);
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		//layout scanner, catch exceptions
-		try {
-			layoutIn = new Scanner(layoutReader);
-		} catch (Exception e) {
-			System.out.println(e);
-		}
+		loadSetupConfig();
+		loadLayoutConfig();
 		
 		int i = 0;
 		int j = 0;
@@ -104,11 +77,7 @@ public class Board {
 			i++;
 			
 		}
-		try {
-			layoutIn2 = new Scanner(layoutReader);
-		} catch (Exception e) {
-			System.out.println(e);
-		}
+		
 		
 		this.rows = i;
 		this.columns = j;
@@ -178,12 +147,46 @@ public class Board {
 	}
 
 	public void loadSetupConfig() {
-		
+		//load setup file, catch exceptions
+				try {
+					setupReader = new File(setupConfigFile);
+				}
+				catch (Exception e) {
+					System.out.println(e);
+				}
+				
+
+				//setup scanner, catch exceptions
+				try {
+					setupIn = new Scanner(setupReader);
+				} catch (Exception e) {
+					System.out.println(e);
+				}
+				
 	}
 
 	public void loadLayoutConfig() {
+		//load layout file, catch exceptions
+		try {
+			layoutReader = new File(layoutConfigFile);
 
+		}
+		catch (Exception e) {
+			System.out.println(e);
+		}
+		//layout scanner, catch exceptions
+		try {
+			layoutIn = new Scanner(layoutReader);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		try {
+			layoutIn2 = new Scanner(layoutReader);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 	}
+	
 
 
 
