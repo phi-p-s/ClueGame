@@ -32,7 +32,7 @@ public class FileInitTest {
 		// Board is singleton, get the only instance
 		board = Board.getInstance();
 		// set the file names to use my config files
-		board.setConfigFiles("C:\\\\Users\\\\phill\\\\eclipse-workspace\\\\ClueGame\\\\data\\\\ClueLayout.csv", "C:\\Users\\phill\\eclipse-workspace\\ClueGame\\data\\ClueSetup.txt");
+		board.setConfigFiles("C:\\Users\\phill\\eclipse-workspace\\ClueGame\\data\\ClueLayout.csv", "C:\\Users\\phill\\eclipse-workspace\\ClueGame\\data\\ClueSetup.txt");
 		// Initialize will load BOTH config files
 		board.initialize();
 	}
@@ -55,8 +55,8 @@ public class FileInitTest {
 	@Test
 	public void testBoardDimensions() {
 		// Ensure we have the proper number of rows and columns
-		assertEquals(NUM_ROWS, board.getRows());
-		assertEquals(NUM_COLUMNS, board.getColumns());
+		assertEquals(NUM_ROWS, board.getNumRows());
+		assertEquals(NUM_COLUMNS, board.getNumColumns());
 	}
 
 	// Test a doorway in each direction (RIGHT/LEFT/UP/DOWN), plus
@@ -86,8 +86,8 @@ public class FileInitTest {
 	@Test
 	public void testNumberOfDoorways() {
 		int numDoors = 0;
-		for (int row = 0; row < board.getRows(); row++)
-			for (int col = 0; col < board.getColumns(); col++) {
+		for (int row = 0; row < board.getNumRows(); row++)
+			for (int col = 0; col < board.getNumColumns(); col++) {
 				BoardCell cell = board.getCell(row, col);
 				if (cell.isDoorway())
 					numDoors++;
@@ -104,7 +104,7 @@ public class FileInitTest {
 		assertTrue( room != null );
 		assertEquals( room.getName(), "Classroom" ) ;
 		assertFalse( cell.isLabel() );
-		assertFalse( cell.isCenter() ) ;
+		assertFalse( cell.isRoomCenter() ) ;
 		assertFalse( cell.isDoorway()) ;
 
 		// this is a label cell to test
@@ -120,7 +120,7 @@ public class FileInitTest {
 		room = board.getRoom( cell ) ;
 		assertTrue( room != null );
 		assertEquals( room.getName(), "Maintenance Deck" ) ;
-		assertTrue( cell.isCenter() );
+		assertTrue( cell.isRoomCenter() );
 		assertTrue( room.getCenterCell() == cell );
 		
 		// this is a secret passage test
@@ -136,7 +136,7 @@ public class FileInitTest {
 		// Note for our purposes, walkways and closets are rooms
 		assertTrue( room != null );
 		assertEquals( room.getName(), "Walkway" ) ;
-		assertFalse( cell.isCenter() );
+		assertFalse( cell.isRoomCenter() );
 		assertFalse( cell.isLabel() );
 		
 		// test an Unused Space (Wall)
@@ -144,7 +144,7 @@ public class FileInitTest {
 		room = board.getRoom( cell ) ;
 		assertTrue( room != null );
 		assertEquals( room.getName(), "Unused" ) ;
-		assertFalse( cell.isCenter() );
+		assertFalse( cell.isRoomCenter() );
 		assertFalse( cell.isLabel() );
 		
 	}

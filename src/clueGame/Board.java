@@ -28,6 +28,7 @@ public class Board {
 	private File layoutReader;
 	private Scanner setupIn;
 	private Scanner layoutIn;
+	private Scanner layoutIn2;
 	private String[][] layoutGrid;
 	//constructor
 
@@ -58,10 +59,7 @@ public class Board {
 
 	public void initialize() {
 		//add TestBoardCell to each spot in the grid
-		this.rows = 19; //add 1 to rows to account for 0-18
-		this.columns = 30; //add 1 to columns to account for 0-29
-		grid = new BoardCell[rows][columns];
-		layoutGrid = new String[rows][columns];
+		
 		visited = new HashSet<BoardCell>();
 		targets = new HashSet<BoardCell>();
 		roomMap = new HashMap<Character, Room>();
@@ -96,8 +94,26 @@ public class Board {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-
-
+		
+		int i = 0;
+		int j = 0;
+		while(layoutIn.hasNextLine()) {
+			String line = layoutIn.nextLine();
+			String[] parts = line.split(",");
+			j = parts.length;
+			i++;
+			
+		}
+		try {
+			layoutIn2 = new Scanner(layoutReader);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		
+		this.rows = i;
+		this.columns = j;
+		grid = new BoardCell[rows][columns];
+		layoutGrid = new String[rows][columns];
 		//Create Map for Character to Room
 		while (setupIn.hasNextLine()) {
 			String line = setupIn.nextLine();
@@ -110,14 +126,13 @@ public class Board {
 		}
 
 		//temporary iterator to keep track of rows
-		int i = 0;
-		String temp = layoutIn.nextLine(); //skip first row
-		while(layoutIn.hasNextLine()) {
-			String line = layoutIn.nextLine();
+		i = 0;
+		while(layoutIn2.hasNextLine()) {
+			String line = layoutIn2.nextLine();
 			String[] value = line.split(",");
 			//start at j = 1 to skip the column that lists which row it is
-			for(int j = 1; j < value.length; j++) {
-				layoutGrid[i][j-1] = value[j];
+			for(j = 0; j < value.length; j++) {
+				layoutGrid[i][j] = value[j];
 			}
 			i++; //increment to next row
 		}
@@ -125,10 +140,10 @@ public class Board {
 		//creates a grid of cells, size r x c
 		for(int r = 0; r < rows; r++) {
 			for(int c = 0; c < columns; c++) {
+				//create cell at current location
+				grid[r][c] = new BoardCell(r, c);
 				BoardCell currentCell = grid[r][c];
 				String currentLayout = layoutGrid[r][c];
-				//create cell at current location
-				currentCell = new BoardCell(r, c);
 				//set letter of the new cell to be the first letter given by the layout file
 				currentCell.setLetter(currentLayout.charAt(0));
 				if((layoutGrid[r][c].length() == 2) && (currentLayout.charAt(0) == 'W')) {
@@ -144,7 +159,7 @@ public class Board {
 					if(currentCell.isLabel()) {
 						getRoom(currentLayout.charAt(0)).setLabelCell(currentCell);
 					}
-					if(currentCell.isCenter()) {
+					if(currentCell.isRoomCenter()) {
 						getRoom(currentLayout.charAt(0)).setCenterCell(currentCell);
 					}
 					
@@ -163,7 +178,7 @@ public class Board {
 	}
 
 	public void loadSetupConfig() {
-
+		
 	}
 
 	public void loadLayoutConfig() {
@@ -189,10 +204,10 @@ public class Board {
 		return grid[row][col];
 	}
 	//COLUMNS AND ROWS
-	public int getRows() {
+	public int getNumRows() {
 		return rows;
 	}
-	public int getColumns() {
+	public int getNumColumns() {
 		return columns;
 	}
 	//OTHER

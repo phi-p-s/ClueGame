@@ -63,7 +63,7 @@ public class BoardCell {
 	public boolean isLabel() {
 		return isLabel;
 	}
-	public boolean isCenter() {
+	public boolean isRoomCenter() {
 		return isCenter;
 	}
 	//sets multiple things, since it takes in the second character from the layout file. 
