@@ -9,7 +9,10 @@ public class Room {
 	
 	public Room() {
 		super();
-		this.name = "-";
+	}
+	public Room(String name) {
+		super();
+		this.name = name;
 	}
 	
 	//GETTERS AND SETTERS
@@ -21,5 +24,11 @@ public class Room {
 	}
 	public BoardCell getLabelCell() {
 		return this.labelCell;
+	}
+	public void setLabelCell(BoardCell cell) {
+		this.labelCell = cell;
+	}
+	public void setCenterCell(BoardCell cell) {
+		this.centerCell = cell;
 	}
 }

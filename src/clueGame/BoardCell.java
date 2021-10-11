@@ -13,6 +13,8 @@ public class BoardCell {
 	private boolean isOccupied;
 	private boolean isDoorway;
 	private boolean isSecretPassage;
+	private Character letter;
+	private Character secretPassage;
 	private DoorDirection doorDirection;
 	private boolean isLabel;
 	private boolean isCenter;
@@ -47,15 +49,23 @@ public class BoardCell {
 	public boolean isLabel() {
 		return isLabel;
 	}
-	public void setLabel(boolean isLabel) {
-		this.isLabel = isLabel;
+	//sets multiple things, since it takes in the second character from the layout file. Possible values indicate, label, center, or secret passage location
+	public void setLabelCenterSecret(Character letter) {
+		if(letter == '#') {
+			this.isLabel = true;
+		}
+		else if(letter == '*') {
+			this.isCenter = true;
+		}
+		else {
+			this.secretPassage = letter;
+			this.isSecretPassage = true;
+		}
 	}
 	public boolean isCenter() {
 		return isCenter;
 	}
-	public void setCenter(boolean isCenter) {
-		this.isCenter = isCenter;
-	}
+	
 	//ISOCCUPIED
 	public void setIsOccupied(boolean isOccupied) {
 		this.isOccupied = isOccupied;
@@ -70,6 +80,23 @@ public class BoardCell {
 	public boolean isDoorway() {
 		return this.isDoorway;
 	}
+	public void setDoorDirection(char direction) {
+		if(direction == 'v') {
+			this.doorDirection = doorDirection.DOWN;
+		}
+		else if(direction == '^') {
+			this.doorDirection = doorDirection.UP;
+		}
+	
+		else if(direction == '<') {
+			this.doorDirection = doorDirection.LEFT;
+		}
+		else {
+			this.doorDirection = doorDirection.RIGHT;
+		}
+		
+		
+	}
 	public DoorDirection getDoorDirection() {
 		return doorDirection;
 	}
@@ -80,11 +107,19 @@ public class BoardCell {
 	public int getColumn() {
 		return column;
 	}
+	//NAME
+	public void setLetter(Character letter) {
+		this.letter = letter;
+	}
+	public Character getLetter() {
+		return letter;
+	}
 	//SECRET PASSAGE
 	public boolean isSecretPassage() {
 		return isSecretPassage;
 	}
 	public Character getSecretPassage() {
-		return '-';
+		return secretPassage;
 	}
+	
 }
