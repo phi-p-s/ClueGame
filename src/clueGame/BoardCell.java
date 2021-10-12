@@ -120,6 +120,10 @@ public class BoardCell {
 			this.doorDirection = doorDirection.RIGHT;
 		}
 	}
+	
+	public void setDoorDirection() {
+		this.doorDirection = doorDirection.NONE;
+	}
 	public DoorDirection getDoorDirection() {
 		return doorDirection;
 	}

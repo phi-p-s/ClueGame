@@ -15,12 +15,11 @@ public class Board {
 
 	private BoardCell[][] grid;
 	private Set<BoardCell> targets;
-	private Room temporaryRoom;
 	private Set<BoardCell> visited;
 	private String layoutConfigFile;
 	private String setupConfigFile;
 	private Map<Character, Room> roomMap;
-	private Map<BoardCell, Room> roomMap2;
+	private Set<BoardCell> centers;
 	private int columns;
 	private int rows;
 	//File IO
@@ -39,35 +38,19 @@ public class Board {
 		super();
 	}
 
-	public void calcTargets(BoardCell startCell, int pathlength) {
-		visited.add(startCell);
-		for(BoardCell cell: startCell.getAdjList()) {
-			if(!visited.contains(cell)) {
-				visited.add(cell);
-				if(((pathlength == 1) && !cell.isOccupied()) || cell.isRoom()) {
-					targets.add(cell);
-				}
-				else if(!cell.isOccupied()){
-					calcTargets(cell, pathlength-1);
-				}
-				visited.remove(cell);
-			}
-		}
-
-	}
 
 
 	public void initialize() {
 		//add TestBoardCell to each spot in the grid
-		
+
 		visited = new HashSet<BoardCell>();
 		targets = new HashSet<BoardCell>();
+		centers = new HashSet<BoardCell>();
 		roomMap = new HashMap<Character, Room>();
-		roomMap2 = new HashMap<BoardCell, Room>();
-
+		
 		loadSetupConfig();
 		loadLayoutConfig();
-		
+
 		int i = 0;
 		int j = 0;
 		while(layoutIn.hasNextLine()) {
@@ -75,10 +58,10 @@ public class Board {
 			String[] parts = line.split(",");
 			j = parts.length;
 			i++;
-			
+
 		}
-		
-		
+
+
 		this.rows = i;
 		this.columns = j;
 		grid = new BoardCell[rows][columns];
@@ -115,10 +98,15 @@ public class Board {
 				String currentLayout = layoutGrid[r][c];
 				//set letter of the new cell to be the first letter given by the layout file
 				currentCell.setLetter(currentLayout.charAt(0));
+				currentCell.setDoorDirection();
+				if(currentLayout.charAt(0) != 'W' || currentLayout.charAt(0) != 'X') {
+					currentCell.setIsRoom(true);
+				}
 				if((layoutGrid[r][c].length() == 2) && (currentLayout.charAt(0) == 'W')) {
 					if(currentLayout.charAt(1) == 'v' || currentLayout.charAt(1) == '>' || currentLayout.charAt(1) == '<' ||  currentLayout.charAt(1) == '^') {
 						currentCell.setIsDoorway(true);
 						currentCell.setDoorDirection(currentLayout.charAt(1));
+						
 					}
 				}
 				//checks for whether its of length 2, then sends second character to check what it means
@@ -129,40 +117,130 @@ public class Board {
 						getRoom(currentLayout.charAt(0)).setLabelCell(currentCell);
 					}
 					if(currentCell.isRoomCenter()) {
+						centers.add(currentCell);
 						getRoom(currentLayout.charAt(0)).setCenterCell(currentCell);
 					}
-					
 				}
 			}
 		}
-		//create adjacency list for each cell
 		for(int r = 0; r < rows; r++) {
 			for(int c = 0; c < columns; c++) {
-				if(r + 1 < rows) grid[r][c].addAdjacency(grid[r+1][c]);
-				if(r - 1 >= 0) grid[r][c].addAdjacency(grid[r-1][c]);
-				if(c + 1 < columns) grid[r][c].addAdjacency(grid[r][c+1]);
-				if(c - 1 >= 0) grid[r][c].addAdjacency(grid[r][c-1]);
+				//add cell to list of doors stored in room class
+				BoardCell currentCell = grid[r][c];
+				switch(currentCell.getDoorDirection()) {
+				case UP:
+					getRoom(grid[r-1][c]).addDoor(currentCell);
+					break;
+				case DOWN:
+					getRoom(grid[r+1][c]).addDoor(currentCell);
+					break;
+				case RIGHT:
+					getRoom(grid[r][c+1]).addDoor(currentCell);
+					break;
+				case LEFT:
+					getRoom(grid[r][c-1]).addDoor(currentCell);
+					break;
+				case NONE:
+					break;
+				}
+			}
+		}
+		calcAdjacencies();
+	}
+
+	public void calcAdjacencies() {
+		//create adjacency list for each cell
+		Room temp;
+		Room currentRoom;
+		//separate loop to check rooms
+		for(BoardCell currentCell: centers) {
+			currentRoom = getRoom(currentCell);
+			//loop through list of doorCells in the current room
+			for(BoardCell doorCell: currentRoom.getAdjDoors()) {
+				currentCell.addAdjacency(doorCell);
+			}
+		}
+		for(int r = 0; r < rows; r++) {
+			for(int c = 0; c < columns; c++) {
+				//for cells that are not rooms
+				if(!grid[r][c].isRoom()) {
+					//check that above cell exists
+					if(r + 1 < rows) {
+						//check if above cell is room
+						if(!grid[r+1][c].isRoom()) {
+							grid[r][c].addAdjacency(grid[r+1][c]);
+						}
+						//add center of room
+						else if(grid[r][c].getDoorDirection() == DoorDirection.DOWN){
+							temp = getRoom(grid[r+1][c]);
+							grid[r][c].addAdjacency(temp.getCenterCell());
+						}
+					}
+					if(r - 1 >= 0) {
+						if(!grid[r-1][c].isRoom()) {
+							grid[r][c].addAdjacency(grid[r-1][c]);
+						}
+						else if(grid[r][c].getDoorDirection() == DoorDirection.UP){
+							temp = getRoom(grid[r-1][c]);
+							grid[r][c].addAdjacency(temp.getCenterCell());
+						}
+					}
+					if(c + 1 < columns) {
+						if(!grid[r][c+1].isRoom()) {
+							grid[r][c].addAdjacency(grid[r][c+1]);
+						}
+						else if(grid[r][c].getDoorDirection() == DoorDirection.RIGHT){
+							temp = getRoom(grid[r][c+1]);
+							grid[r][c].addAdjacency(temp.getCenterCell());
+						}
+					}
+					if(c - 1 >= 0) {
+						if(!grid[r][c-1].isRoom()) {
+							grid[r][c].addAdjacency(grid[r][c-1]);
+						}
+						else if(grid[r][c].getDoorDirection() == DoorDirection.LEFT){
+							temp = getRoom(grid[r][c-1]);
+							grid[r][c].addAdjacency(temp.getCenterCell());
+						}
+					} //End of if(c - 1 >= 0)
+				} //End of if(!grid[r][c].isRoom())
+			} // End of for(column)
+		} // End of for(row)
+	}
+	//find targets given a cell and pathlength (recursive)
+	public void calcTargets(BoardCell startCell, int pathlength) {
+		visited.add(startCell);
+		for(BoardCell cell: startCell.getAdjList()) {
+			if(!visited.contains(cell)) {
+				visited.add(cell);
+				if(((pathlength == 1) && !cell.isOccupied()) || cell.isRoom()) {
+					targets.add(cell);
+				}
+				else if(!cell.isOccupied()){
+					calcTargets(cell, pathlength-1);
+				}
+				visited.remove(cell);
 			}
 		}
 	}
 
 	public void loadSetupConfig() {
 		//load setup file, catch exceptions
-				try {
-					setupReader = new File(setupConfigFile);
-				}
-				catch (Exception e) {
-					System.out.println(e);
-				}
-				
+		try {
+			setupReader = new File(setupConfigFile);
+		}
+		catch (Exception e) {
+			System.out.println(e);
+		}
 
-				//setup scanner, catch exceptions
-				try {
-					setupIn = new Scanner(setupReader);
-				} catch (Exception e) {
-					System.out.println(e);
-				}
-				
+
+		//setup scanner, catch exceptions
+		try {
+			setupIn = new Scanner(setupReader);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
 	}
 
 	public void loadLayoutConfig() {
@@ -186,7 +264,7 @@ public class Board {
 			System.out.println(e);
 		}
 	}
-	
+
 
 
 
@@ -229,6 +307,6 @@ public class Board {
 		return layoutGrid;
 	}
 
-	
+
 
 }

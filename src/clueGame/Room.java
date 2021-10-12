@@ -1,23 +1,34 @@
 package clueGame;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Room {
 	
 	//instance variables
 	private String name;
 	BoardCell centerCell;
 	BoardCell labelCell;
+	private Set<BoardCell> adjDoors;
 	
 	public Room() {
 		super();
 	}
 	public Room(String name) {
 		super();
+		adjDoors = new HashSet<BoardCell>();
 		this.name = name;
 	}
 	
 	//GETTERS AND SETTERS
 	
 	//Name related getters & setters. 
+	public void addDoor(BoardCell cell) {
+		adjDoors.add(cell);
+	}
+	public Set<BoardCell> getAdjDoors() {
+		return adjDoors;
+	}
 	public String getName() {
 		return this.name;
 	}
