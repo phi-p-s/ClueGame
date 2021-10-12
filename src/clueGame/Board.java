@@ -196,6 +196,11 @@ public class Board {
 		this.layoutConfigFile = layoutFile;
 		this.setupConfigFile = setupFile;
 	}
+	//ADJACENCY LISTS
+	public Set<BoardCell> getAdjList(int row, int column) {
+		// TODO Auto-generated method stub
+		return Collections.emptySet();
+	} 
 	//CELLS & ROOMS
 	public Room getRoom(Character letter) {
 		return roomMap.get(letter);
@@ -223,5 +228,7 @@ public class Board {
 	public String[][] getLayoutGrid(){
 		return layoutGrid;
 	}
+
+	
 
 }
