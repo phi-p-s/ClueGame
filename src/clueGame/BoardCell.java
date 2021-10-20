@@ -75,7 +75,7 @@ public class BoardCell {
 		else if(letter == '*') {
 			this.isCenter = true;
 		}
-		else {
+		else if(letter != 'v' && letter != '<' && letter != '>' && letter != '^'){
 			this.secretPassage = letter;
 			this.isSecretPassage = true;
 		}

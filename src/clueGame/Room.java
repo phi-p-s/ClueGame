@@ -9,6 +9,8 @@ public class Room {
 	private String name;
 	BoardCell centerCell;
 	BoardCell labelCell;
+	private Character secretPassage;
+	private boolean hasSecretPassage;
 	private Set<BoardCell> adjDoors;
 	
 	public Room() {
@@ -25,6 +27,16 @@ public class Room {
 	//Name related getters & setters. 
 	public void addDoor(BoardCell cell) {
 		adjDoors.add(cell);
+	}
+	public void setSecretPassage(Character letter) {
+		hasSecretPassage = true;
+		secretPassage = letter;
+	}
+	public Character getSecretPassage() {
+		return secretPassage;
+	}
+	public boolean hasSecretPassage() {
+		return hasSecretPassage;
 	}
 	public Set<BoardCell> getAdjDoors() {
 		return adjDoors;

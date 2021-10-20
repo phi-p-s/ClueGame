@@ -99,7 +99,7 @@ public class Board {
 				//set letter of the new cell to be the first letter given by the layout file
 				currentCell.setLetter(currentLayout.charAt(0));
 				currentCell.setDoorDirection();
-				if(currentLayout.charAt(0) != 'W' || currentLayout.charAt(0) != 'X') {
+				if(currentLayout.charAt(0) != 'W' && currentLayout.charAt(0) != 'X') {
 					currentCell.setIsRoom(true);
 				}
 				if((layoutGrid[r][c].length() == 2) && (currentLayout.charAt(0) == 'W')) {
@@ -112,6 +112,9 @@ public class Board {
 				//checks for whether its of length 2, then sends second character to check what it means
 				if(layoutGrid[r][c].length() == 2) {
 					currentCell.setLabelCenterSecret(currentLayout.charAt(1));
+					if(currentCell.isSecretPassage()) {
+						getRoom(currentCell).setSecretPassage(currentLayout.charAt(1));
+					}
 					//check whether we set it to label/center cell, and then set it to that for the room
 					if(currentCell.isLabel()) {
 						getRoom(currentLayout.charAt(0)).setLabelCell(currentCell);
@@ -123,6 +126,11 @@ public class Board {
 				}
 			}
 		}
+		createDoorLists();
+		calcAdjacencies();
+	}
+	
+	public void createDoorLists() {
 		for(int r = 0; r < rows; r++) {
 			for(int c = 0; c < columns; c++) {
 				//add cell to list of doors stored in room class
@@ -145,13 +153,12 @@ public class Board {
 				}
 			}
 		}
-		calcAdjacencies();
 	}
-
 	public void calcAdjacencies() {
 		//create adjacency list for each cell
 		Room temp;
 		Room currentRoom;
+		Room secretRoom;
 		//separate loop to check rooms
 		for(BoardCell currentCell: centers) {
 			currentRoom = getRoom(currentCell);
@@ -159,15 +166,20 @@ public class Board {
 			for(BoardCell doorCell: currentRoom.getAdjDoors()) {
 				currentCell.addAdjacency(doorCell);
 			}
+			if(currentRoom.hasSecretPassage()) {
+				secretRoom = getRoom(currentRoom.getSecretPassage());
+				currentCell.addAdjacency(secretRoom.getCenterCell());
+			}
+			
 		}
 		for(int r = 0; r < rows; r++) {
 			for(int c = 0; c < columns; c++) {
 				//for cells that are not rooms
-				if(!grid[r][c].isRoom()) {
+				if(!grid[r][c].isRoom() && grid[r][c].getLetter() != 'X') {
 					//check that above cell exists
 					if(r + 1 < rows) {
 						//check if above cell is room
-						if(!grid[r+1][c].isRoom()) {
+						if(!grid[r+1][c].isRoom() && grid[r+1][c].getLetter() != 'X') {
 							grid[r][c].addAdjacency(grid[r+1][c]);
 						}
 						//add center of room
@@ -177,7 +189,7 @@ public class Board {
 						}
 					}
 					if(r - 1 >= 0) {
-						if(!grid[r-1][c].isRoom()) {
+						if(!grid[r-1][c].isRoom() && grid[r-1][c].getLetter() != 'X') {
 							grid[r][c].addAdjacency(grid[r-1][c]);
 						}
 						else if(grid[r][c].getDoorDirection() == DoorDirection.UP){
@@ -186,7 +198,7 @@ public class Board {
 						}
 					}
 					if(c + 1 < columns) {
-						if(!grid[r][c+1].isRoom()) {
+						if(!grid[r][c+1].isRoom() && grid[r][c+1].getLetter() != 'X') {
 							grid[r][c].addAdjacency(grid[r][c+1]);
 						}
 						else if(grid[r][c].getDoorDirection() == DoorDirection.RIGHT){
@@ -195,7 +207,7 @@ public class Board {
 						}
 					}
 					if(c - 1 >= 0) {
-						if(!grid[r][c-1].isRoom()) {
+						if(!grid[r][c-1].isRoom() && grid[r][c-1].getLetter() != 'X') {
 							grid[r][c].addAdjacency(grid[r][c-1]);
 						}
 						else if(grid[r][c].getDoorDirection() == DoorDirection.LEFT){
@@ -209,6 +221,11 @@ public class Board {
 	}
 	//find targets given a cell and pathlength (recursive)
 	public void calcTargets(BoardCell startCell, int pathlength) {
+		targets.clear();
+		visited.clear();
+		calcTargetsRecursive(startCell, pathlength);
+	}
+	public void calcTargetsRecursive(BoardCell startCell, int pathlength) {
 		visited.add(startCell);
 		for(BoardCell cell: startCell.getAdjList()) {
 			if(!visited.contains(cell)) {
@@ -217,7 +234,7 @@ public class Board {
 					targets.add(cell);
 				}
 				else if(!cell.isOccupied()){
-					calcTargets(cell, pathlength-1);
+					calcTargetsRecursive(cell, pathlength-1);
 				}
 				visited.remove(cell);
 			}
@@ -275,10 +292,10 @@ public class Board {
 		this.setupConfigFile = setupFile;
 	}
 	//ADJACENCY LISTS
-	public Set<BoardCell> getAdjList(int row, int column) {
-		// TODO Auto-generated method stub
-		return Collections.emptySet();
-	} 
+	public Set<BoardCell> getAdjList(int row, int col){
+		BoardCell cell = grid[row][col];
+		return cell.getAdjList();
+	}
 	//CELLS & ROOMS
 	public Room getRoom(Character letter) {
 		return roomMap.get(letter);
@@ -306,6 +323,7 @@ public class Board {
 	public String[][] getLayoutGrid(){
 		return layoutGrid;
 	}
+	
 
 
 
