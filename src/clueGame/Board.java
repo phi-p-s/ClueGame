@@ -60,8 +60,6 @@ public class Board {
 			i++;
 
 		}
-
-
 		this.rows = i;
 		this.columns = j;
 		grid = new BoardCell[rows][columns];
@@ -90,6 +88,11 @@ public class Board {
 		}
 
 		//creates a grid of cells, size r x c
+		createGrid();
+		createDoorLists();
+		calcAdjacencies();
+	}
+	public void createGrid() {
 		for(int r = 0; r < rows; r++) {
 			for(int c = 0; c < columns; c++) {
 				//create cell at current location
@@ -126,10 +129,7 @@ public class Board {
 				}
 			}
 		}
-		createDoorLists();
-		calcAdjacencies();
 	}
-	
 	public void createDoorLists() {
 		for(int r = 0; r < rows; r++) {
 			for(int c = 0; c < columns; c++) {
