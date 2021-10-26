@@ -47,15 +47,16 @@ public class Board {
 		centers = new HashSet<BoardCell>();
 		roomMap = new HashMap<Character, Room>();
 		
+		try {
 		loadSetupConfig();
 		loadLayoutConfig();
-
+		}
+		catch(Exception e) {
+			System.out.println(e);
+		}
 		
 		grid = new BoardCell[rows][columns];
 		layoutGrid = new String[rows][columns];
-		
-
-	
 		//creates a grid of cells, size r x c
 		createGrid();
 		createDoorLists();
@@ -215,22 +216,12 @@ public class Board {
 		}
 	}
 
-	public void loadSetupConfig() {
-		//load setup file, catch exceptions
-		try {
-			setupReader = new File(setupConfigFile);
-		}
-		catch (Exception e) {
-			System.out.println(e);
-		}
+	public void loadSetupConfig() throws Exception{
+		//setup reader, throw exceptions
+		setupReader = new File(setupConfigFile);
+		//setup scanner, throw exceptions
+		setupIn = new Scanner(setupReader);
 
-
-		//setup scanner, catch exceptions
-		try {
-			setupIn = new Scanner(setupReader);
-		} catch (Exception e) {
-			System.out.println(e);
-		}
 		//Create Map for Character to Room
 		while (setupIn.hasNextLine()) {
 			String line = setupIn.nextLine();
@@ -244,26 +235,14 @@ public class Board {
 
 	}
 
-	public void loadLayoutConfig() {
-		//load layout file, catch exceptions
-		try {
+	public void loadLayoutConfig() throws Exception{
+		//load layout file, throw exceptions
 			layoutReader = new File(layoutConfigFile);
-
-		}
-		catch (Exception e) {
-			System.out.println(e);
-		}
-		//layout scanner, catch exceptions
-		try {
+		//layout scanner, throw exceptions
 			layoutIn = new Scanner(layoutReader);
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		try {
+
 			layoutIn2 = new Scanner(layoutReader);
-		} catch (Exception e) {
-			System.out.println(e);
-		}
+
 		
 		//get number of rows and columns
 		int i = 0;
