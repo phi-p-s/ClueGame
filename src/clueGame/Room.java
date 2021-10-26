@@ -16,6 +16,7 @@ public class Room {
 	public Room() {
 		super();
 	}
+	
 	public Room(String name) {
 		super();
 		adjDoors = new HashSet<BoardCell>();

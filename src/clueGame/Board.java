@@ -30,7 +30,6 @@ public class Board {
 	private Scanner layoutIn2;
 	private String[][] layoutGrid;
 	//constructor
-
 	private static Board theInstance = new Board();
 
 	//Private so only one gets made
@@ -101,15 +100,17 @@ public class Board {
 				String currentLayout = layoutGrid[r][c];
 				//set letter of the new cell to be the first letter given by the layout file
 				currentCell.setLetter(currentLayout.charAt(0));
+				//initialize Door Direction to NONE
 				currentCell.setDoorDirection();
+				//Sets isRoom if not a walkway or a wall
 				if(currentLayout.charAt(0) != 'W' && currentLayout.charAt(0) != 'X') {
 					currentCell.setIsRoom(true);
 				}
+				//Checks second character of walkway tiles to get doorDirection
 				if((layoutGrid[r][c].length() == 2) && (currentLayout.charAt(0) == 'W')) {
 					if(currentLayout.charAt(1) == 'v' || currentLayout.charAt(1) == '>' || currentLayout.charAt(1) == '<' ||  currentLayout.charAt(1) == '^') {
 						currentCell.setIsDoorway(true);
-						currentCell.setDoorDirection(currentLayout.charAt(1));
-						
+						currentCell.setDoorDirection(currentLayout.charAt(1));	
 					}
 				}
 				//checks for whether its of length 2, then sends second character to check what it means
@@ -133,7 +134,7 @@ public class Board {
 	public void createDoorLists() {
 		for(int r = 0; r < rows; r++) {
 			for(int c = 0; c < columns; c++) {
-				//add cell to list of doors stored in room class
+				//add cell to list of doors adjacent to a given room stored in room class
 				BoardCell currentCell = grid[r][c];
 				switch(currentCell.getDoorDirection()) {
 				case UP:
@@ -166,12 +167,13 @@ public class Board {
 			for(BoardCell doorCell: currentRoom.getAdjDoors()) {
 				currentCell.addAdjacency(doorCell);
 			}
+			//if room is a secret passage, add the centerCell of the room its connected to
 			if(currentRoom.hasSecretPassage()) {
 				secretRoom = getRoom(currentRoom.getSecretPassage());
 				currentCell.addAdjacency(secretRoom.getCenterCell());
 			}
-			
 		}
+		//loop through each cell
 		for(int r = 0; r < rows; r++) {
 			for(int c = 0; c < columns; c++) {
 				//for cells that are not rooms
@@ -220,11 +222,13 @@ public class Board {
 		} // End of for(row)
 	}
 	//find targets given a cell and pathlength (recursive)
+	//this function calls the recursive function, in order to clear targets/visited each time a new target list is made
 	public void calcTargets(BoardCell startCell, int pathlength) {
 		targets.clear();
 		visited.clear();
 		calcTargetsRecursive(startCell, pathlength);
 	}
+	//recursive function that calculates targets
 	public void calcTargetsRecursive(BoardCell startCell, int pathlength) {
 		visited.add(startCell);
 		for(BoardCell cell: startCell.getAdjList()) {
