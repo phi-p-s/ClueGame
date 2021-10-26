@@ -53,16 +53,7 @@ public class Board {
 		
 		grid = new BoardCell[rows][columns];
 		layoutGrid = new String[rows][columns];
-		//Create Map for Character to Room
-		while (setupIn.hasNextLine()) {
-			String line = setupIn.nextLine();
-			//check if its a comment
-			if(line.charAt(0) != '/') {
-				String[] parts = line.split(", ");
-				//if specified room, add to map
-				roomMap.put(parts[2].charAt(0), new Room(parts[1]));							
-			}
-		}
+		
 
 	
 		//creates a grid of cells, size r x c
@@ -239,6 +230,16 @@ public class Board {
 			setupIn = new Scanner(setupReader);
 		} catch (Exception e) {
 			System.out.println(e);
+		}
+		//Create Map for Character to Room
+		while (setupIn.hasNextLine()) {
+			String line = setupIn.nextLine();
+			//check if its a comment
+			if(line.charAt(0) != '/') {
+				String[] parts = line.split(", ");
+				//if specified room, add to map
+				roomMap.put(parts[2].charAt(0), new Room(parts[1]));							
+			}
 		}
 
 	}
