@@ -78,29 +78,38 @@ public class Board {
 					currentCell.setIsRoom(true);
 				}
 				//Checks second character of walkway tiles to get doorDirection
-				if((layoutGrid[r][c].length() == 2) && (currentLayout.charAt(0) == 'W')) {
-					if(currentLayout.charAt(1) == 'v' || currentLayout.charAt(1) == '>' || currentLayout.charAt(1) == '<' ||  currentLayout.charAt(1) == '^') {
+				if((layoutGrid[r][c].length() == 2)){
+					//get second character
+					Character secondChar = currentLayout.charAt(1);
+					//get room
+					Room currentRoom = getRoom(currentCell);
+					//checks second character and sets room accordingly, defaults to secret passage
+					switch(secondChar) {
+					case('v'):
 						currentCell.setIsDoorway(true);
-						currentCell.setDoorDirection(currentLayout.charAt(1));	
-					}
-				}
-				//checks for whether its of length 2, then sends second character to check what it means
-				if(layoutGrid[r][c].length() == 2) {
-					currentCell.setLabelCenterSecret(currentLayout.charAt(1));
-					if(currentCell.isSecretPassage()) {
-						getRoom(currentCell).setSecretPassage(currentLayout.charAt(1));
-					}
-					//check whether we set it to label/center cell, and then set it to that for the room
-					if(currentCell.isLabel()) {
-						getRoom(currentLayout.charAt(0)).setLabelCell(currentCell);
-					}
-					if(currentCell.isRoomCenter()) {
-						centers.add(currentCell);
-						getRoom(currentLayout.charAt(0)).setCenterCell(currentCell);
-					}
-				}
-			}
-		}
+						currentCell.setDoorDirection(secondChar);
+					case('<'):
+						currentCell.setIsDoorway(true);
+						currentCell.setDoorDirection(secondChar);
+					case('>'):
+						currentCell.setIsDoorway(true);
+						currentCell.setDoorDirection(secondChar);
+					case('^'):
+						currentCell.setIsDoorway(true);
+						currentCell.setDoorDirection(secondChar);
+					case('#'):
+						currentCell.setLabel();
+						currentRoom.setLabelCell(currentCell);
+					case('*'):
+						currentCell.setCenter();
+						currentRoom.setCenterCell(currentCell);
+					default:
+						currentCell.setSecretPassageCell(secondChar);
+						currentRoom.setSecretPassage(secondChar);
+					}//switch
+				}//if length 2
+			}//nested for loop
+		}//for loop
 	}
 	public void createDoorLists() {
 		for(int r = 0; r < rows; r++) {

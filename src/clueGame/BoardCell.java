@@ -68,6 +68,16 @@ public class BoardCell {
 	}
 	//sets multiple things, since it takes in the second character from the layout file. 
 	//Possible values indicate, label, center, or secret passage location
+	public void setLabel() {
+		this.isLabel = true;
+	}
+	public void setCenter() {
+		this.isCenter = true;
+	}
+	public void setSecretPassageCell(Character letter) {
+		this.secretPassage = letter;
+		this.isSecretPassage = true;
+	}
 	public void setLabelCenterSecret(Character letter) {
 		if(letter == '#') {
 			this.isLabel = true;
