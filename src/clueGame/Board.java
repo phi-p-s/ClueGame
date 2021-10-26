@@ -12,7 +12,6 @@ import java.io.FileNotFoundException;
 
 
 public class Board {
-
 	private BoardCell[][] grid;
 	private Set<BoardCell> targets;
 	private Set<BoardCell> visited;
@@ -29,24 +28,56 @@ public class Board {
 	private Scanner layoutIn;
 	private Scanner layoutIn2;
 	private String[][] layoutGrid;
+	//GETTERS AND SETTERS
+	//CONFIG
+	public void setConfigFiles(String layoutFile, String setupFile) {
+		this.layoutConfigFile = layoutFile;
+		this.setupConfigFile = setupFile;
+	}
+	//ADJACENCY LISTS
+	public Set<BoardCell> getAdjList(int row, int col){
+		BoardCell cell = grid[row][col];
+		return cell.getAdjList();
+	}
+	//CELLS & ROOMS
+	public Room getRoom(Character letter) {
+		return roomMap.get(letter);
+	}
+	public Room getRoom(BoardCell cell) {
+		return roomMap.get(cell.getLetter());
+	}
+	public BoardCell getCell(int row, int col) {
+		return grid[row][col];
+	}
+	//COLUMNS AND ROWS
+	public int getNumRows() {
+		return rows;
+	}
+	public int getNumColumns() {
+		return columns;
+	}
+	//OTHER
+	public Set<BoardCell> getTargets(){
+		return targets;
+	}
+	public static Board getInstance() {
+		return theInstance;
+	}
+	public String[][] getLayoutGrid(){
+		return layoutGrid;
+	}
+	
 	//constructor
 	private static Board theInstance = new Board();
-
 	//Private so only one gets made
 	private Board() {
 		super();
 	}
-
-
-
 	public void initialize() {
-		//add TestBoardCell to each spot in the grid
-
 		visited = new HashSet<BoardCell>();
 		targets = new HashSet<BoardCell>();
 		centers = new HashSet<BoardCell>();
 		roomMap = new HashMap<Character, Room>();
-		
 		try {
 		loadSetupConfig();
 		loadLayoutConfig();
@@ -54,7 +85,6 @@ public class Board {
 		catch(Exception e) {
 			System.out.println(e);
 		}
-		
 		grid = new BoardCell[rows][columns];
 		layoutGrid = new String[rows][columns];
 		//creates a grid of cells, size r x c
@@ -234,12 +264,13 @@ public class Board {
 		}
 	}
 
+	
+	//FILE IO METHODS
 	public void loadSetupConfig() throws FileNotFoundException{
 		//setup reader, throw exceptions
 		setupReader = new File(setupConfigFile);
 		//setup scanner, throw exceptions
 		setupIn = new Scanner(setupReader);
-
 		//Create Map for Character to Room
 		while (setupIn.hasNextLine()) {
 			String line = setupIn.nextLine();
@@ -252,15 +283,12 @@ public class Board {
 		}
 
 	}
-
 	public void loadLayoutConfig() throws FileNotFoundException, BadConfigFormatException{
 		//load layout file, throw exceptions
 		layoutReader = new File(layoutConfigFile);
 		//layout scanner, throw exceptions
 		layoutIn = new Scanner(layoutReader);
 		layoutIn2 = new Scanner(layoutReader);
-
-	
 		//get number of rows and columns
 		int i = 0;
 		int j = 0;
@@ -291,51 +319,9 @@ public class Board {
 				throw new BadConfigFormatException("Layout File is not properly formatted");
 			}
 		}
-
 	}
 
 
-
-
-	//GETTERS AND SETTERS
-	//CONFIG
-	public void setConfigFiles(String layoutFile, String setupFile) {
-		this.layoutConfigFile = layoutFile;
-		this.setupConfigFile = setupFile;
-	}
-	//ADJACENCY LISTS
-	public Set<BoardCell> getAdjList(int row, int col){
-		BoardCell cell = grid[row][col];
-		return cell.getAdjList();
-	}
-	//CELLS & ROOMS
-	public Room getRoom(Character letter) {
-		return roomMap.get(letter);
-	}
-	public Room getRoom(BoardCell cell) {
-		return roomMap.get(cell.getLetter());
-	}
-	public BoardCell getCell(int row, int col) {
-		return grid[row][col];
-	}
-	//COLUMNS AND ROWS
-	public int getNumRows() {
-		return rows;
-	}
-	public int getNumColumns() {
-		return columns;
-	}
-	//OTHER
-	public Set<BoardCell> getTargets(){
-		return targets;
-	}
-	public static Board getInstance() {
-		return theInstance;
-	}
-	public String[][] getLayoutGrid(){
-		return layoutGrid;
-	}
-	
 
 
 
