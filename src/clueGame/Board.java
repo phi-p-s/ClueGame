@@ -50,17 +50,7 @@ public class Board {
 		loadSetupConfig();
 		loadLayoutConfig();
 
-		int i = 0;
-		int j = 0;
-		while(layoutIn.hasNextLine()) {
-			String line = layoutIn.nextLine();
-			String[] parts = line.split(",");
-			j = parts.length;
-			i++;
-
-		}
-		this.rows = i;
-		this.columns = j;
+		
 		grid = new BoardCell[rows][columns];
 		layoutGrid = new String[rows][columns];
 		//Create Map for Character to Room
@@ -74,18 +64,7 @@ public class Board {
 			}
 		}
 
-		//temporary iterator to keep track of rows
-		i = 0;
-		while(layoutIn2.hasNextLine()) {
-			String line = layoutIn2.nextLine();
-			String[] value = line.split(",");
-			//start at j = 1 to skip the column that lists which row it is
-			for(j = 0; j < value.length; j++) {
-				layoutGrid[i][j] = value[j];
-			}
-			i++; //increment to next row
-		}
-
+	
 		//creates a grid of cells, size r x c
 		createGrid();
 		createDoorLists();
@@ -284,6 +263,32 @@ public class Board {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		
+		//get number of rows and columns
+		int i = 0;
+		int j = 0;
+		while(layoutIn.hasNextLine()) {
+			String line = layoutIn.nextLine();
+			String[] parts = line.split(",");
+			j = parts.length;
+			i++;
+
+		}
+		this.rows = i;
+		this.columns = j;
+		//create map of letters using the csv
+		//temporary iterator to keep track of rows
+		i = 0;
+		while(layoutIn2.hasNextLine()) {
+			String line = layoutIn2.nextLine();
+			String[] value = line.split(",");
+			//start at j = 1 to skip the column that lists which row it is
+			for(j = 0; j < value.length; j++) {
+				layoutGrid[i][j] = value[j];
+			}
+			i++; //increment to next row
+		}
+
 	}
 
 
