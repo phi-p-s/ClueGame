@@ -158,40 +158,49 @@ public class Board {
 			for(int c = 0; c < columns; c++) {
 				//for cells that are not rooms
 				if(!grid[r][c].isRoom() && grid[r][c].getLetter() != 'X') {
-					//check that above cell exists
+					//check that above cell is not out of bounds
 					if(r + 1 < rows) {
-						//check if above cell is room
+						//if the cell above is not a room or a wall, add the adjacency
 						if(!grid[r+1][c].isRoom() && grid[r+1][c].getLetter() != 'X') {
 							grid[r][c].addAdjacency(grid[r+1][c]);
 						}
-						//add center of room
+						//if the current cell is a door that points down, add center of the room to the down
 						else if(grid[r][c].getDoorDirection() == DoorDirection.DOWN){
 							temp = getRoom(grid[r+1][c]);
 							grid[r][c].addAdjacency(temp.getCenterCell());
 						}
 					}
+					//check that below cell exists
 					if(r - 1 >= 0) {
+						//if the cell above is not a room or a wall, add the adjacency
 						if(!grid[r-1][c].isRoom() && grid[r-1][c].getLetter() != 'X') {
 							grid[r][c].addAdjacency(grid[r-1][c]);
 						}
+						//if the current cell is a door that points up, add center of the room to the up
 						else if(grid[r][c].getDoorDirection() == DoorDirection.UP){
 							temp = getRoom(grid[r-1][c]);
 							grid[r][c].addAdjacency(temp.getCenterCell());
 						}
 					}
+					//check that cell to the right is not out of bounds
 					if(c + 1 < columns) {
+						//if the cell above is not a room or a wall, add the adjacency
 						if(!grid[r][c+1].isRoom() && grid[r][c+1].getLetter() != 'X') {
 							grid[r][c].addAdjacency(grid[r][c+1]);
 						}
+						//if the current cell is a door that points right, add center of the room to the right
 						else if(grid[r][c].getDoorDirection() == DoorDirection.RIGHT){
 							temp = getRoom(grid[r][c+1]);
 							grid[r][c].addAdjacency(temp.getCenterCell());
 						}
 					}
+					//check that cell to the left is not out of bounds
 					if(c - 1 >= 0) {
+						//if the cell above is not a room or a wall, add the adjacency
 						if(!grid[r][c-1].isRoom() && grid[r][c-1].getLetter() != 'X') {
 							grid[r][c].addAdjacency(grid[r][c-1]);
 						}
+						//if the current cell is a door that points left, add center of the room to the left
 						else if(grid[r][c].getDoorDirection() == DoorDirection.LEFT){
 							temp = getRoom(grid[r][c-1]);
 							grid[r][c].addAdjacency(temp.getCenterCell());
@@ -279,7 +288,7 @@ public class Board {
 		int size = layoutGrid[i].length;
 		for(i = 0; i < layoutGrid.length; i++) {
 			if(layoutGrid[i].length != size) {
-				throw new BadConfigFormatException("Layout File is not properly formatted")
+				throw new BadConfigFormatException("Layout File is not properly formatted");
 			}
 		}
 
