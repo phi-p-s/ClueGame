@@ -225,7 +225,7 @@ public class Board {
 		}
 	}
 
-	public void loadSetupConfig() throws Exception{
+	public void loadSetupConfig() throws FileNotFoundException{
 		//setup reader, throw exceptions
 		setupReader = new File(setupConfigFile);
 		//setup scanner, throw exceptions
@@ -244,15 +244,14 @@ public class Board {
 
 	}
 
-	public void loadLayoutConfig() throws Exception{
+	public void loadLayoutConfig() throws FileNotFoundException, BadConfigFormatException{
 		//load layout file, throw exceptions
-			layoutReader = new File(layoutConfigFile);
+		layoutReader = new File(layoutConfigFile);
 		//layout scanner, throw exceptions
-			layoutIn = new Scanner(layoutReader);
+		layoutIn = new Scanner(layoutReader);
+		layoutIn2 = new Scanner(layoutReader);
 
-			layoutIn2 = new Scanner(layoutReader);
-
-		
+	
 		//get number of rows and columns
 		int i = 0;
 		int j = 0;
@@ -276,6 +275,12 @@ public class Board {
 				layoutGrid[i][j] = value[j];
 			}
 			i++; //increment to next row
+		}
+		int size = layoutGrid[i].length;
+		for(i = 0; i < layoutGrid.length; i++) {
+			if(layoutGrid[i].length != size) {
+				throw new BadConfigFormatException("Layout File is not properly formatted")
+			}
 		}
 
 	}

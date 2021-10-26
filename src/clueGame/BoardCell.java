@@ -78,18 +78,7 @@ public class BoardCell {
 		this.secretPassage = letter;
 		this.isSecretPassage = true;
 	}
-	public void setLabelCenterSecret(Character letter) {
-		if(letter == '#') {
-			this.isLabel = true;
-		}
-		else if(letter == '*') {
-			this.isCenter = true;
-		}
-		else if(letter != 'v' && letter != '<' && letter != '>' && letter != '^'){
-			this.secretPassage = letter;
-			this.isSecretPassage = true;
-		}
-	}
+
 	//SECRET PASSAGE
 	public boolean isSecretPassage() {
 		return isSecretPassage;
