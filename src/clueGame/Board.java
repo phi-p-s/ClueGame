@@ -91,7 +91,6 @@ public class Board {
 		createGrid();
 		createDoorLists();
 		calcAdjacencies();
-		// rando comment
 	}
 	public void createGrid() {
 		for(int r = 0; r < rows; r++) {
