@@ -1,5 +1,6 @@
 package clueGame;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,6 +22,7 @@ public class Board {
 	private Set<BoardCell> centers;
 	private int columns;
 	private int rows;
+	private ArrayList<Player> players;
 	//File IO
 	private File setupReader;
 	private File layoutReader;
@@ -30,6 +32,10 @@ public class Board {
 	private String[][] layoutGrid;
 	//GETTERS AND SETTERS
 	//CONFIG
+	public ArrayList<Player> getPlayers() {
+		return players;
+	}
+	
 	public void setConfigFiles(String layoutFile, String setupFile) {
 		this.layoutConfigFile = layoutFile;
 		this.setupConfigFile = setupFile;
@@ -277,8 +283,18 @@ public class Board {
 			//check if its a comment
 			if(line.charAt(0) != '/') {
 				String[] parts = line.split(", ");
-				//if specified room, add to map
-				roomMap.put(parts[2].charAt(0), new Room(parts[1]));							
+				
+				switch(parts[0]) {
+				case("Room"):
+					//if specified room, add to map
+					roomMap.put(parts[2].charAt(0), new Room(parts[1]));
+				case("Player"):
+					players.add(new Player(parts[1]));
+				case("Weapon"):
+				
+				case("Space"):
+					roomMap.put(parts[2].charAt(0), new Room(parts[1]));
+				}						
 			}
 		}
 
