@@ -12,3 +12,17 @@ Room, MedBay, Y
 // Other spaces on board
 Space, Unused, X
 Space, Walkway, W
+// Weapons
+Weapon, Plasma Gun
+Weapon, Robot Arm
+Weapon, Screwdriver
+Weapon, Lazer Knife
+Weapon, Baseball Bat
+Weapon, Crowbar
+// Players
+Player, The Robot
+Player, Maureen Robinson
+Player, Will Robinson
+Player, John Robinson
+Player, Penny Robinson
+Player, Judy Robinson
