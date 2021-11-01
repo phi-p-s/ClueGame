@@ -46,11 +46,15 @@ public class GameSetUpTests {
 	@Test
 	public void deckOfCards() {
 		ArrayList<Card> testDeck = board.getDeck();
-		
+		//check that the size is 21, and that the different card types are loaded
 		assertEquals(21, testDeck.size());
 		assertEquals(CardType.ROOM, testDeck.get(0).getCardType());
 		assertEquals(CardType.WEAPON, testDeck.get(9).getCardType());
 		assertEquals(CardType.PLAYER, testDeck.get(20).getCardType());
+		assertEquals("Jupiter 02", testDeck.get(0).getName());
+		assertEquals("Plasma Gun", testDeck.get(9).getName());
+		assertEquals("Judy Robinson", testDeck.get(20).getName());
+		
 	}
 	
 	  

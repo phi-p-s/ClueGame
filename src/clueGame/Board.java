@@ -90,7 +90,7 @@ public class Board {
 		centers = new HashSet<BoardCell>();
 		roomMap = new HashMap<Character, Room>();
 		players = new ArrayList<Player>();
-		
+		deck = new ArrayList<Card>();
 		loadSetupConfig();
 		loadLayoutConfig();
 			
@@ -302,6 +302,7 @@ public class Board {
 					case("Room"):
 						//if specified room, add to map
 						roomMap.put(parts[2].charAt(0), new Room(parts[1]));
+						deck.add(new Card(CardType.ROOM, parts[1]));
 						break;
 					case("Player"):
 						if(humanPlayer) {
@@ -311,11 +312,11 @@ public class Board {
 						else {
 							players.add(new ComputerPlayer(parts[1]));
 						}
-						
+						deck.add(new Card(CardType.PLAYER, parts[1]));
 						break;
 					case("Weapon"):
+						deck.add(new Card(CardType.WEAPON, parts[1]));
 						break;
-
 					case("Space"):
 						roomMap.put(parts[2].charAt(0), new Room(parts[1]));
 					break;
