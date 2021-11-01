@@ -2,6 +2,7 @@ package clueGame;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.Scanner;
 import java.io.Reader;
 import java.io.File;
 import java.io.FileNotFoundException;
+
 
 
 public class Board {
@@ -24,6 +26,10 @@ public class Board {
 	private int rows;
 	private ArrayList<Player> players;
 	private ArrayList<Card> deck;
+	private ArrayList<Card> playerCards;
+	private ArrayList<Card> weaponCards;
+	private ArrayList<Card> roomCards;
+	private ArrayList<Card> solution;
 	//File IO
 	private File setupReader;
 	private File layoutReader;
@@ -41,6 +47,9 @@ public class Board {
 		return deck;
 	}
 	
+	public ArrayList<Card> getSolution(){
+		return solution;
+	}
 	public void setConfigFiles(String layoutFile, String setupFile) {
 		this.layoutConfigFile = layoutFile;
 		this.setupConfigFile = setupFile;
@@ -91,6 +100,10 @@ public class Board {
 		roomMap = new HashMap<Character, Room>();
 		players = new ArrayList<Player>();
 		deck = new ArrayList<Card>();
+		solution = new ArrayList<Card>();
+		roomCards = new ArrayList<Card>();
+		playerCards = new ArrayList<Card>();
+		weaponCards = new ArrayList<Card>();
 		loadSetupConfig();
 		loadLayoutConfig();
 			
@@ -280,7 +293,18 @@ public class Board {
 			}
 		}
 	}
-
+	public void generateSolution() {
+		Random rng = new Random();
+		solution.clear();
+		//generate indexes from the size of each list
+		int roomInt = rng.nextInt(roomCards.size());
+		int weaponInt = rng.nextInt(weaponCards.size());
+		int playerInt = rng.nextInt(playerCards.size());
+		//put the thing in the solution
+		solution.add(playerCards.get(playerInt));
+		solution.add(roomCards.get(roomInt));
+		solution.add(weaponCards.get(weaponInt));
+	}
 	
 	//FILE IO METHODS
 	public void loadSetupConfig(){
@@ -291,18 +315,21 @@ public class Board {
 			setupIn = new Scanner(setupReader);
 			//Create Map for Character to Room
 			boolean humanPlayer = true;
+			//iterator to make sure that separate sets of cards still contain the same copy
 			while (setupIn.hasNextLine()) {
 				String line = setupIn.nextLine();
 				//check if its a comment
 				
 				if(line.charAt(0) != '/') {
 					String[] parts = line.split(", ");
-
+					
 					switch(parts[0]) {
 					case("Room"):
-						//if specified room, add to map
+						//if specified room, add to map & deck
 						roomMap.put(parts[2].charAt(0), new Room(parts[1]));
 						deck.add(new Card(CardType.ROOM, parts[1]));
+						//add to separate set of rooms (for solution)
+						roomCards.add(deck.get(deck.size()-1));
 						break;
 					case("Player"):
 						if(humanPlayer) {
@@ -312,15 +339,19 @@ public class Board {
 						else {
 							players.add(new ComputerPlayer(parts[1]));
 						}
+						//add to deck & separate set of players (for solution)
 						deck.add(new Card(CardType.PLAYER, parts[1]));
+						playerCards.add(deck.get(deck.size()-1));
 						break;
 					case("Weapon"):
+						//add to deck & separate set of weapons (for solution)
 						deck.add(new Card(CardType.WEAPON, parts[1]));
+						weaponCards.add(deck.get(deck.size()-1));
 						break;
 					case("Space"):
 						roomMap.put(parts[2].charAt(0), new Room(parts[1]));
 					break;
-					}						
+					}	
 				}
 			}
 		}

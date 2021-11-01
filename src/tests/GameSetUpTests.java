@@ -33,7 +33,7 @@ public class GameSetUpTests {
 	@Test
 	public void readInPlayer() {
 		ArrayList<Player> testPlayer = board.getPlayers();
-		
+		//check that their is the correct amount of players, the names are loaded, and that the first player is set to human
 		assertEquals(6, testPlayer.size());
 		assertEquals("The Robot", testPlayer.get(0).getPlayerName());
 		assertEquals("Will Robinson", testPlayer.get(2).getPlayerName());
@@ -57,6 +57,23 @@ public class GameSetUpTests {
 		
 	}
 	
+	@Test
+	public void solutionTest() {
+		int rngCheck = 0;
+		//tests to make sure that solution contains the right types of cards, and that it is random
+		for(int i = 0; i < 600; i++) {
+			board.generateSolution();
+			ArrayList<Card> testSolution = board.getSolution();
+			assertEquals(CardType.PLAYER, testSolution.get(0).getCardType());
+			assertEquals(CardType.ROOM, testSolution.get(1).getCardType());
+			assertEquals(CardType.WEAPON, testSolution.get(2).getCardType());
+			if(testSolution.get(0).getName().equals("The Robot")) {
+				rngCheck++;
+			}
+		}
+		assertTrue(rngCheck >= 40);
+		
+	}
 	  
 	
 	
