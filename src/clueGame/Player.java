@@ -11,4 +11,8 @@ public class Player {
 	public String getPlayerName() {
 		return playerName;
 	}
+	
+	public boolean isHuman() {
+		return false;
+	}
 }

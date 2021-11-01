@@ -23,6 +23,7 @@ public class Board {
 	private int columns;
 	private int rows;
 	private ArrayList<Player> players;
+	private ArrayList<Card> deck;
 	//File IO
 	private File setupReader;
 	private File layoutReader;
@@ -34,6 +35,10 @@ public class Board {
 	//CONFIG
 	public ArrayList<Player> getPlayers() {
 		return players;
+	}
+	
+	public ArrayList<Card> getDeck(){
+		return deck;
 	}
 	
 	public void setConfigFiles(String layoutFile, String setupFile) {
@@ -84,15 +89,13 @@ public class Board {
 		targets = new HashSet<BoardCell>();
 		centers = new HashSet<BoardCell>();
 		roomMap = new HashMap<Character, Room>();
-		try {
+		players = new ArrayList<Player>();
+		
 		loadSetupConfig();
 		loadLayoutConfig();
-		}
-		catch(Exception e) {
-			System.out.println(e);
-		}
+			
 		grid = new BoardCell[rows][columns];
-		layoutGrid = new String[rows][columns];
+		
 		//creates a grid of cells, size r x c
 		createGrid();
 		createDoorLists();
@@ -124,24 +127,32 @@ public class Board {
 					case('v'):
 						currentCell.setIsDoorway(true);
 						currentCell.setDoorDirection(secondChar);
+						break;
 					case('<'):
 						currentCell.setIsDoorway(true);
 						currentCell.setDoorDirection(secondChar);
+						break;
 					case('>'):
 						currentCell.setIsDoorway(true);
 						currentCell.setDoorDirection(secondChar);
+						break;
 					case('^'):
 						currentCell.setIsDoorway(true);
 						currentCell.setDoorDirection(secondChar);
+						break;
 					case('#'):
 						currentCell.setLabel();
 						currentRoom.setLabelCell(currentCell);
+						break;
 					case('*'):
 						currentCell.setCenter();
 						currentRoom.setCenterCell(currentCell);
+						centers.add(currentCell);
+						break;
 					default:
 						currentCell.setSecretPassageCell(secondChar);
 						currentRoom.setSecretPassage(secondChar);
+						break;
 					}//switch
 				}//if length 2
 			}//nested for loop
@@ -272,73 +283,92 @@ public class Board {
 
 	
 	//FILE IO METHODS
-	public void loadSetupConfig() throws FileNotFoundException{
+	public void loadSetupConfig(){
 		//setup reader, throw exceptions
-		setupReader = new File(setupConfigFile);
-		//setup scanner, throw exceptions
-		setupIn = new Scanner(setupReader);
-		//Create Map for Character to Room
-		while (setupIn.hasNextLine()) {
-			String line = setupIn.nextLine();
-			//check if its a comment
-			if(line.charAt(0) != '/') {
-				String[] parts = line.split(", ");
+		try {
+			setupReader = new File(setupConfigFile);
+			//setup scanner, throw exceptions
+			setupIn = new Scanner(setupReader);
+			//Create Map for Character to Room
+			boolean humanPlayer = true;
+			while (setupIn.hasNextLine()) {
+				String line = setupIn.nextLine();
+				//check if its a comment
 				
-				switch(parts[0]) {
-				case("Room"):
-					//if specified room, add to map
-					roomMap.put(parts[2].charAt(0), new Room(parts[1]));
-				case("Player"):
-					players.add(new Player(parts[1]));
-				case("Weapon"):
-				
-				case("Space"):
-					roomMap.put(parts[2].charAt(0), new Room(parts[1]));
-				}						
+				if(line.charAt(0) != '/') {
+					String[] parts = line.split(", ");
+
+					switch(parts[0]) {
+					case("Room"):
+						//if specified room, add to map
+						roomMap.put(parts[2].charAt(0), new Room(parts[1]));
+						break;
+					case("Player"):
+						if(humanPlayer) {
+							players.add(new HumanPlayer(parts[1]));
+							humanPlayer = false;
+						}
+						else {
+							players.add(new ComputerPlayer(parts[1]));
+						}
+						
+						break;
+					case("Weapon"):
+						break;
+
+					case("Space"):
+						roomMap.put(parts[2].charAt(0), new Room(parts[1]));
+					break;
+					}						
+				}
 			}
+		}
+		catch(Exception e) {
+			System.out.println(e);
 		}
 
 	}
-	public void loadLayoutConfig() throws FileNotFoundException, BadConfigFormatException{
+	public void loadLayoutConfig(){
 		//load layout file, throw exceptions
-		layoutReader = new File(layoutConfigFile);
-		//layout scanner, throw exceptions
-		layoutIn = new Scanner(layoutReader);
-		layoutIn2 = new Scanner(layoutReader);
-		//get number of rows and columns
-		int i = 0;
-		int j = 0;
-		while(layoutIn.hasNextLine()) {
-			String line = layoutIn.nextLine();
-			String[] parts = line.split(",");
-			j = parts.length;
-			i++;
+		try {
+			layoutReader = new File(layoutConfigFile);
+			//layout scanner, throw exceptions
+			layoutIn = new Scanner(layoutReader);
+			layoutIn2 = new Scanner(layoutReader);
+			//get number of rows and columns
+			int i = 0;
+			int j = 0;
+			while(layoutIn.hasNextLine()) {
+				String line = layoutIn.nextLine();
+				String[] parts = line.split(",");
+				j = parts.length;
+				i++;
 
-		}
-		this.rows = i;
-		this.columns = j;
-		//create map of letters using the csv
-		//temporary iterator to keep track of rows
-		i = 0;
-		while(layoutIn2.hasNextLine()) {
-			String line = layoutIn2.nextLine();
-			String[] value = line.split(",");
-			//start at j = 1 to skip the column that lists which row it is
-			for(j = 0; j < value.length; j++) {
-				layoutGrid[i][j] = value[j];
 			}
-			i++; //increment to next row
-		}
-		int size = layoutGrid[i].length;
-		for(i = 0; i < layoutGrid.length; i++) {
-			if(layoutGrid[i].length != size) {
-				throw new BadConfigFormatException("Layout File is not properly formatted");
+			this.rows = i;
+			this.columns = j;
+			layoutGrid = new String[rows][columns];
+			//create map of letters using the csv
+			//temporary iterator to keep track of rows
+			i = 0;
+			while(layoutIn2.hasNextLine()) {
+				String line = layoutIn2.nextLine();
+				String[] value = line.split(",");
+				//start at j = 1 to skip the column that lists which row it is
+				for(j = 0; j < value.length; j++) {
+					layoutGrid[i][j] = value[j];
+				}
+				i++; //increment to next row
 			}
+			//int size = layoutGrid[i].length;
+			//for(i = 0; i < layoutGrid.length; i++) {
+			//	if(layoutGrid[i].length != size) {
+			//	throw new BadConfigFormatException("Layout File is not properly formatted");
+			//}
+			//}
+		}
+		catch(Exception e) {
+			System.out.println(e);
 		}
 	}
-
-
-
-
-
 }
