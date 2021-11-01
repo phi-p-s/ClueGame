@@ -2,9 +2,11 @@ package tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -46,6 +48,7 @@ public class GameSetUpTests {
 	@Test
 	public void deckOfCards() {
 		ArrayList<Card> testDeck = board.getDeck();
+		board.resetDeck();
 		//check that the size is 21, and that the different card types are loaded
 		assertEquals(21, testDeck.size());
 		assertEquals(CardType.ROOM, testDeck.get(0).getCardType());
@@ -71,8 +74,28 @@ public class GameSetUpTests {
 				rngCheck++;
 			}
 		}
+		//check to see if its kinda random idk
 		assertTrue(rngCheck >= 40);
-		
+	}
+	
+	@Test
+	public void dealTest() {
+		ArrayList<Card> testSolution = board.getSolution();
+		ArrayList<Player> testPlayers = board.getPlayers();
+		Set<Card> testDuplicates = new HashSet<Card>();
+		assertEquals(3, testPlayers.get(0).getHand().size());
+		for(Player player: testPlayers) {
+			for(Card playerCard: player.getHand()) {
+				for(Card solutionCard: testSolution) {
+					//check that the players card is not in the solution
+					assertNotEquals(solutionCard, playerCard);	
+				}
+				//check that player card is not a duplicate
+				assertFalse(testDuplicates.contains(playerCard));
+				//add current card to duplicate set
+				testDuplicates.add(playerCard);
+			}
+		}
 	}
 	  
 	

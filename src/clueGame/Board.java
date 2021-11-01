@@ -113,6 +113,8 @@ public class Board {
 		createGrid();
 		createDoorLists();
 		calcAdjacencies();
+		generateSolution();
+		dealHands();
 	}
 	public void createGrid() {
 		for(int r = 0; r < rows; r++) {
@@ -304,8 +306,39 @@ public class Board {
 		solution.add(playerCards.get(playerInt));
 		solution.add(roomCards.get(roomInt));
 		solution.add(weaponCards.get(weaponInt));
+		deck.remove(playerCards.get(playerInt));
+		deck.remove(roomCards.get(roomInt));
+		deck.remove(weaponCards.get(weaponInt));
 	}
 	
+	public void dealHands() {
+		int j = 0;
+		Card card;
+		Random rng = new Random();
+		int size = deck.size();
+		//for each card in the deck, give the next player a card to add to their hand
+		for(int i = 0; i < size; i++) {
+			int rand_int = rng.nextInt(deck.size());
+			card = deck.get(rand_int);
+			j = i % players.size();
+			players.get(j).addToHand(card);
+			deck.remove(rand_int);
+		}
+	}
+	//reset deck in case it gets emptied for some reason and we need it to not be empty
+	public void resetDeck() {
+		deck.clear();
+		for(Card room: roomCards) {
+			deck.add(room);
+		}
+		for(Card weapon: weaponCards) {
+			deck.add(weapon);
+		}
+		for(Card player: playerCards) {
+			deck.add(player);
+		}
+		
+	}
 	//FILE IO METHODS
 	public void loadSetupConfig(){
 		//setup reader, throw exceptions
