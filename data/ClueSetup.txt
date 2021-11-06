@@ -20,9 +20,9 @@ Weapon, Lazer Knife
 Weapon, Baseball Bat
 Weapon, Crowbar
 // Players
-Player, The Robot
-Player, Maureen Robinson
-Player, Will Robinson
-Player, John Robinson
-Player, Penny Robinson
-Player, Judy Robinson
+Player, The Robot, Blue
+Player, Maureen Robinson, Red
+Player, Will Robinson, Green
+Player, John Robinson, Yellow
+Player, Penny Robinson, Pink
+Player, Judy Robinson, Purple

@@ -2,6 +2,7 @@ package clueGame;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Random;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,6 +27,7 @@ public class Board {
 	private int rows;
 	private ArrayList<Player> players;
 	private ArrayList<Card> deck;
+	private ArrayList<Card> allDeck;
 	private ArrayList<Card> playerCards;
 	private ArrayList<Card> weaponCards;
 	private ArrayList<Card> roomCards;
@@ -43,13 +45,50 @@ public class Board {
 		return players;
 	}
 	
+	public Player getPlayer(String name) {
+		for(Player player: players) {
+			if(player.getPlayerName().equals(name)) {
+				return player;
+			}
+		}
+		//in theory should work
+		return null;
+	}
 	public ArrayList<Card> getDeck(){
 		return deck;
 	}
-	
+	public ArrayList<Card> getPlayerCards(){
+		return playerCards;
+	}
+	public ArrayList<Card> getWeaponCards(){
+		return weaponCards;
+	}
+	public ArrayList<Card> getRoomCards(){
+		return roomCards;
+	}
+	public Card getCard(String name) {
+		for(Card card: allDeck) {
+			if(card.getName().equals(name)) {
+				return card;
+			}
+		}
+		return null;
+	}
 	public ArrayList<Card> getSolution(){
 		return solution;
 	}
+	
+	public void setSolution(Card player, Card room, Card weapon) {
+		solution.clear();
+		solution.add(player);
+		solution.add(room);
+		solution.add(weapon);
+	}
+	
+	public boolean checkSolution(Card player, Card room, Card weapon) {
+		return (solution.get(0) == player && solution.get(1) == room && solution.get(2) == weapon);
+	}
+	
 	public void setConfigFiles(String layoutFile, String setupFile) {
 		this.layoutConfigFile = layoutFile;
 		this.setupConfigFile = setupFile;
@@ -104,6 +143,7 @@ public class Board {
 		roomCards = new ArrayList<Card>();
 		playerCards = new ArrayList<Card>();
 		weaponCards = new ArrayList<Card>();
+		allDeck = new ArrayList<Card>();
 		loadSetupConfig();
 		loadLayoutConfig();
 			
@@ -310,20 +350,36 @@ public class Board {
 		deck.remove(roomCards.get(roomInt));
 		deck.remove(weaponCards.get(weaponInt));
 	}
-	
 	public void dealHands() {
 		int j = 0;
 		Card card;
 		Random rng = new Random();
 		int size = deck.size();
 		//for each card in the deck, give the next player a card to add to their hand
-		for(int i = 0; i < size; i++) {
+		for(int i = 1; i < size; i++) {
 			int rand_int = rng.nextInt(deck.size());
 			card = deck.get(rand_int);
 			j = i % players.size();
 			players.get(j).addToHand(card);
 			deck.remove(rand_int);
 		}
+		//make each player add their hand to their list of seen cards
+		for(Player player: players) {
+			player.startSeen();
+		}
+	}
+	public Card handleSuggestion(Player currentPlayer, ArrayList<Card> suggestion) {
+		int currentId = currentPlayer.getPlayerId();
+		Player disprovePlayer;
+		for(int i = currentId+1; i < players.size()+currentId; i++) {
+			int j = (i)% players.size();
+			disprovePlayer = players.get(j);
+			Card disproveCard = disprovePlayer.disproveSuggestion(suggestion);
+			if(!Objects.isNull(disproveCard)) {
+				return disproveCard;
+			}
+		}
+		return null;
 	}
 	//reset deck in case it gets emptied for some reason and we need it to not be empty
 	public void resetDeck() {
@@ -348,6 +404,7 @@ public class Board {
 			setupIn = new Scanner(setupReader);
 			//Create Map for Character to Room
 			boolean humanPlayer = true;
+			int playerId = 0;
 			//iterator to make sure that separate sets of cards still contain the same copy
 			while (setupIn.hasNextLine()) {
 				String line = setupIn.nextLine();
@@ -361,24 +418,28 @@ public class Board {
 						//if specified room, add to map & deck
 						roomMap.put(parts[2].charAt(0), new Room(parts[1]));
 						deck.add(new Card(CardType.ROOM, parts[1]));
+						allDeck.add(new Card(CardType.ROOM, parts[1]));
 						//add to separate set of rooms (for solution)
 						roomCards.add(deck.get(deck.size()-1));
 						break;
 					case("Player"):
 						if(humanPlayer) {
-							players.add(new HumanPlayer(parts[1]));
+							players.add(new HumanPlayer(parts[1], parts[2], playerId));
 							humanPlayer = false;
 						}
 						else {
-							players.add(new ComputerPlayer(parts[1]));
+							players.add(new ComputerPlayer(parts[1], parts[2], playerId));
 						}
+						playerId++; //next player has the next playerId
 						//add to deck & separate set of players (for solution)
 						deck.add(new Card(CardType.PLAYER, parts[1]));
+						allDeck.add(new Card(CardType.PLAYER, parts[1]));
 						playerCards.add(deck.get(deck.size()-1));
 						break;
 					case("Weapon"):
 						//add to deck & separate set of weapons (for solution)
 						deck.add(new Card(CardType.WEAPON, parts[1]));
+						allDeck.add(new Card(CardType.WEAPON, parts[1]));
 						weaponCards.add(deck.get(deck.size()-1));
 						break;
 					case("Space"):
