@@ -41,6 +41,7 @@ public class GameControlPanel extends JPanel {
 		add(result, BorderLayout.CENTER);	
 	}
 	
+	//private class for the button panel, sets up 2 buttons
 	private class ButtonPanel extends JPanel {
 		public ButtonPanel() {
 			JButton accusationButton = new JButton("Make Accusation");
@@ -53,6 +54,7 @@ public class GameControlPanel extends JPanel {
 		}
 	}
 	
+	//private class for the guess and guess result panels since they have the same format
 	private class GuessPanel extends JPanel{
 		private JTextField field;
 		public GuessPanel(String text, String name) {
@@ -61,11 +63,13 @@ public class GameControlPanel extends JPanel {
 			field.setEditable(false);
 			add(field, BorderLayout.CENTER);
 		}
+		//set the JTextField to new text
 		public void setField(String text) {
 			field.setText(text);
 		}
 	}
 	
+	//Panel that displays the turn info
 	private class TurnPanel extends JPanel{
 		private JLabel turn;
 		private JTextField player;
@@ -87,6 +91,7 @@ public class GameControlPanel extends JPanel {
 			add(rollText, BorderLayout.EAST);
 			
 		}
+		//Set the text field for current player and corresponding color
 		public void setPlayer(String playerName, String color) {
 			player.setText(playerName);
 			switch(color) {
@@ -112,6 +117,7 @@ public class GameControlPanel extends JPanel {
 				player.setBackground(Color.WHITE);
 			}
 		}
+		//update the roll info
 		public void setRoll(int roll) {
 			String rollString = Integer.toString(roll);
 			rollText.setText(rollString);
@@ -135,18 +141,22 @@ public class GameControlPanel extends JPanel {
 		panel.setGuessResult( "So you have nothing?");
 	}
 	
+	//for the accusation button, no real functionality yet
 	private class AccusationListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("hi");
 		}
 	}
 	
+	//for the NEXT button, no real functionality yet
 	private class NextListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("easibhasegfr");
 		}
 	}
 	
+	
+	//setters for different fields within the different panels
 	public void setGuess(String text) {
 		guessPanel.setField(text);
 	}
