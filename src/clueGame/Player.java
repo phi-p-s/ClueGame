@@ -10,6 +10,8 @@ public class Player {
 	private String color;
 	private int playerId;
 	protected Set<Card> seenCards;
+	private int row;
+	private int column;
 	public Player(String playerName, String color, int playerId) {
 		super();
 		this.playerName = playerName;
@@ -33,6 +35,18 @@ public class Player {
 	
 	public int getPlayerId() {
 		return playerId;
+	}
+	
+	public void setRowCol(int row, int col) {
+		this.row = row;
+		this.column = col;
+	}
+	
+	public int getRow(){
+		return row;
+	}
+	public int getColumn() {
+		return column;
 	}
 	public void addToHand(Card card) {
 		hand.add(card);
@@ -80,5 +94,6 @@ public class Player {
 	public BoardCell selectTargets(Board board, Set<BoardCell> targetSet) {
 		return null;
 	}
+	
 	
 }

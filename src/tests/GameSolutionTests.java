@@ -199,6 +199,7 @@ public class GameSolutionTests {
 		assertTrue(classCounter >= 50);
 		//calc targets that have no rooms attached
 		board.calcTargets(board.getCell(9, 4), 1);
+		//run several tests
 		int counter = 0;
 		for(int i = 0; i < 400; i++) {
 			selectedTarget = penny.selectTargets(board, targets);
