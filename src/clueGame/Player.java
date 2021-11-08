@@ -24,7 +24,9 @@ public class Player {
 	public String getPlayerName() {
 		return playerName;
 	}
-	
+	public String getColor() {
+		return color;
+	}
 	public boolean isHuman() {
 		return false;
 	}
