@@ -155,7 +155,6 @@ public class GameControlPanel extends JPanel {
 		}
 	}
 	
-	
 	//setters for different fields within the different panels
 	public void setGuess(String text) {
 		guessPanel.setField(text);

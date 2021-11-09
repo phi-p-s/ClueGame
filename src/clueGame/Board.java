@@ -8,14 +8,18 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import javax.swing.JPanel;
+
 import java.util.Scanner;
 import java.io.Reader;
+import java.awt.Graphics;
 import java.io.File;
 import java.io.FileNotFoundException;
 
 
 
-public class Board {
+public class Board extends JPanel{
 	private BoardCell[][] grid;
 	private Set<BoardCell> targets;
 	private Set<BoardCell> visited;
@@ -77,18 +81,12 @@ public class Board {
 	public ArrayList<Card> getSolution(){
 		return solution;
 	}
-	
 	public void setSolution(Card player, Card room, Card weapon) {
 		solution.clear();
 		solution.add(player);
 		solution.add(room);
 		solution.add(weapon);
 	}
-	
-	public boolean checkSolution(Card player, Card room, Card weapon) {
-		return (solution.get(0) == player && solution.get(1) == room && solution.get(2) == weapon);
-	}
-	
 	public void setConfigFiles(String layoutFile, String setupFile) {
 		this.layoutConfigFile = layoutFile;
 		this.setupConfigFile = setupFile;
@@ -125,7 +123,10 @@ public class Board {
 	public String[][] getLayoutGrid(){
 		return layoutGrid;
 	}
+
 	
+
+
 	//constructor
 	private static Board theInstance = new Board();
 	//Private so only one gets made
@@ -350,13 +351,16 @@ public class Board {
 		deck.remove(roomCards.get(roomInt));
 		deck.remove(weaponCards.get(weaponInt));
 	}
+	public boolean checkSolution(Card player, Card room, Card weapon) {
+		return (solution.get(0) == player && solution.get(1) == room && solution.get(2) == weapon);
+	}
 	public void dealHands() {
 		int j = 0;
 		Card card;
 		Random rng = new Random();
 		int size = deck.size();
 		//for each card in the deck, give the next player a card to add to their hand
-		for(int i = 1; i < size; i++) {
+		for(int i = 1; i <= size; i++) {
 			int rand_int = rng.nextInt(deck.size());
 			card = deck.get(rand_int);
 			j = i % players.size();
@@ -496,5 +500,17 @@ public class Board {
 		catch(Exception e) {
 			System.out.println(e);
 		}
+	}
+	
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		for(int r = 0; r < rows; r++) {
+			for(int c = 0; c < columns; c++) {
+				//get each board cell to paint itself
+			}
+		}
+		//Loop through rooms and draw the labels
+		//Loop through players and get them to draw themselves
 	}
 }
