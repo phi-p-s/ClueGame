@@ -1,5 +1,10 @@
 package clueGame;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +15,11 @@ public class BoardCell {
 	//row and column
 	private int row;
 	private int column;
-	
+	private int width;
+	private int height;
+	private int border;
+	private int drawCol;
+	private int drawRow;
 	//layout related booleans
 	private boolean isRoom;
 	private boolean isOccupied;
@@ -142,7 +151,86 @@ public class BoardCell {
 	public Character getLetter() {
 		return letter;
 	}
-	
-
+	//sets variables for drawing
+	public void getDrawSizes() {
+		Board board = Board.getInstance();
+		int rows = board.getNumRows();
+		int columns = board.getNumColumns();
+		//set the width and height according to the panel size
+		width = board.getWidth()/columns;
+		height = board.getHeight()/rows;
+		drawCol = column*width;
+		drawRow = row*height;
+		border = 4;
+	}
+	public void drawHallWall(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
+		getDrawSizes();
+		//If hallway draw green
+		if(!isRoom && letter != 'X') {
+			g.setColor(Color.ORANGE);
+			g.fillRect(drawCol, drawRow, width, height);
+			g2.setColor(Color.BLACK);
+			g2.setStroke(new BasicStroke(border));
+			g2.drawRect(drawCol, drawRow, width, height);
+			switch(this.doorDirection) {
+			case DOWN:
+				break;
+			case LEFT:
+				break;
+			case RIGHT:
+				break;
+			case UP:
+				break;
+			default:
+				break;
+			}
+		}
+		else if(letter == 'X') {
+			g.setColor(Color.BLACK);
+			g.fillRect(drawCol, drawRow, width, height);
+		}
+	}
+	//draws rooms
+	public void drawRoom(Graphics g) {
+		Board board = Board.getInstance();
+		getDrawSizes();
+		if(isRoom) {
+			g.setColor(Color.LIGHT_GRAY);
+			g.fillRect(drawCol+border/2, drawRow+border/2, width, height);
+			if(isLabel) {
+				String roomName = board.getRoom(this).getName();
+				g.setColor(Color.BLACK);
+				g.setFont(new Font("Serif", Font.PLAIN, 15));
+				g.drawString(roomName, drawCol, drawRow);
+			}
+		}
+	}
+	//draws doors
+	public void drawDoor(Graphics g) {
+		getDrawSizes();
+		//door offset
+		int doorAngle = 2;
+		g.setColor(Color.DARK_GRAY);
+		//check door direction and draw accordingly
+		switch(this.doorDirection) {
+		case DOWN:
+			g.drawLine(drawCol, drawRow+height, drawCol+width, drawRow+height+(height/doorAngle));
+			break;
+		case LEFT:
+			g.drawLine(drawCol, drawRow+height, drawCol-width/doorAngle, drawRow);
+			break;
+		case RIGHT:
+			g.drawLine(drawCol+width, drawRow+height, drawCol+width+width/doorAngle, drawRow);
+			break;
+		case UP:
+			g.drawLine(drawCol, drawRow, drawCol+width, drawRow-(height/doorAngle));
+			break;
+		//Default is not a door (Just in case)
+		default:
+			break;
+		
+		}
+	}
 	
 }

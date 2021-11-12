@@ -7,8 +7,8 @@ import java.util.Set;
 
 public class ComputerPlayer extends Player {
 	
-	public ComputerPlayer(String playerName, String color, int playerId) {
-		super(playerName, color, playerId);
+	public ComputerPlayer(String playerName, String color, String column, String row, int playerId) {
+		super(playerName, color, column, row, playerId);
 		// TODO Auto-generated constructor stub
 	}
 	

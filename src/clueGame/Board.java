@@ -48,7 +48,6 @@ public class Board extends JPanel{
 	public ArrayList<Player> getPlayers() {
 		return players;
 	}
-	
 	public Player getPlayer(String name) {
 		for(Player player: players) {
 			if(player.getPlayerName().equals(name)) {
@@ -125,8 +124,6 @@ public class Board extends JPanel{
 	}
 
 	
-
-
 	//constructor
 	private static Board theInstance = new Board();
 	//Private so only one gets made
@@ -416,7 +413,6 @@ public class Board extends JPanel{
 				
 				if(line.charAt(0) != '/') {
 					String[] parts = line.split(", ");
-					
 					switch(parts[0]) {
 					case("Room"):
 						//if specified room, add to map & deck
@@ -428,11 +424,11 @@ public class Board extends JPanel{
 						break;
 					case("Player"):
 						if(humanPlayer) {
-							players.add(new HumanPlayer(parts[1], parts[2], playerId));
+							players.add(new HumanPlayer(parts[1], parts[2], parts[3], parts[4], playerId));
 							humanPlayer = false;
 						}
 						else {
-							players.add(new ComputerPlayer(parts[1], parts[2], playerId));
+							players.add(new ComputerPlayer(parts[1], parts[2], parts[3], parts[4], playerId));
 						}
 						playerId++; //next player has the next playerId
 						//add to deck & separate set of players (for solution)
@@ -501,16 +497,34 @@ public class Board extends JPanel{
 			System.out.println(e);
 		}
 	}
-	
+	public void setPlayerStart() {
+		for(Player player: players) {
+			
+		}
+	}
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		for(int r = 0; r < rows; r++) {
 			for(int c = 0; c < columns; c++) {
-				//get each board cell to paint itself
+				if(grid[r][c].isRoom()) {
+					grid[r][c].drawRoom(g);
+				}
+				else {
+					grid[r][c].drawHallWall(g);
+				}
 			}
 		}
-		//Loop through rooms and draw the labels
+		for(int r = 0; r < rows; r++) {
+			for(int c = 0; c < columns; c++) {
+				if(grid[r][c].isDoorway()) {
+					grid[r][c].drawDoor(g);
+				}
+			}
+		}
+		for(Player player: players) {
+			player.draw(g);
+		}
 		//Loop through players and get them to draw themselves
 	}
 }

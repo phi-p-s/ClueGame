@@ -1,5 +1,9 @@
 package clueGame;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -7,20 +11,49 @@ import java.util.Set;
 public class Player {
 	private String playerName;
 	private ArrayList<Card> hand;
+	private Color colorDraw;
 	private String color;
 	private int playerId;
 	protected Set<Card> seenCards;
 	private int row;
 	private int column;
-	public Player(String playerName, String color, int playerId) {
+	public Player(String playerName, String color, String column, String row, int playerId) {
 		super();
 		this.playerName = playerName;
 		this.color = color;
 		this.playerId = playerId;
+		this.column = Integer.parseInt(column);
+		this.row = Integer.parseInt(row);
 		hand = new ArrayList<Card>();
 		seenCards = new HashSet<Card>();
+		setDrawColor();
 	}
 	
+	public void setDrawColor() {
+		//set color based on the string
+		switch(color) {
+		case("Blue"):
+			colorDraw = Color.BLUE;
+		break;
+		case("Red"):
+			colorDraw = Color.RED;
+		break;
+		case("Green"):
+			colorDraw = Color.GREEN;
+		break;
+		case("Yellow"):
+			colorDraw = Color.YELLOW;
+		break;
+		case("Pink"):
+			colorDraw = Color.PINK;
+		break;
+		case("Purple"):
+			colorDraw = Color.MAGENTA;
+		break;
+		default:
+			colorDraw = Color.WHITE;
+		}
+	}
 	public String getPlayerName() {
 		return playerName;
 	}
@@ -96,6 +129,24 @@ public class Player {
 	public BoardCell selectTargets(Board board, Set<BoardCell> targetSet) {
 		return null;
 	}
-	
-	
+	public void draw(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
+		Board board = Board.getInstance();
+		int rows = board.getNumRows();
+		int columns = board.getNumColumns();
+		//set the width and height according to the panel size
+		int width = board.getWidth()/columns;
+		int height = board.getHeight()/rows;
+		int drawCol = column*width;
+		int drawRow = row*height;
+		int border = 4;
+		g.setColor(colorDraw);
+		//the "Magic Numbers" are there for centering the circle
+		g.fillOval(drawCol+(2*border/3), drawRow+(border/2), width-(border), height-(border));
+		g2.setStroke(new BasicStroke(border/2));
+		g2.setColor(Color.DARK_GRAY);
+		g.drawOval(drawCol+(2*border/3), drawRow+(border/2), width-(border), height-(border));
+		
+	}
 }
+	

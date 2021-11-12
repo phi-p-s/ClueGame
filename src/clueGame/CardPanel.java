@@ -154,7 +154,7 @@ public class CardPanel extends JPanel {
 		}
 	}
 	public static void main(String[] args) {
-		Player humanPlayer =  new Player("The Robot", "Blue", 0);
+		Player humanPlayer =  new Player("The Robot", "Blue", "0", "0", 0);
 		humanPlayer.addToHand(new Card(CardType.ROOM, "Jupiter 02"));
 		humanPlayer.addToHand(new Card(CardType.ROOM, "Storage"));
 		humanPlayer.addToHand(new Card(CardType.PLAYER, "Penny Robinson"));

@@ -29,7 +29,7 @@ public class GameControlPanel extends JPanel {
 	 * Constructor for the panel, it does 90% of the work
 	 */
 	public GameControlPanel()  {
-		this.currentPlayer = new Player("", "White", 0);
+		this.currentPlayer = new Player("", "White", "0", "0", 0);
 		buttons = new ButtonPanel();
 		guessPanel = new GuessPanel(this.guess, "Guess");
 		result = new GuessPanel(this.guessResult,"Result");
@@ -136,7 +136,7 @@ public class GameControlPanel extends JPanel {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // allow it to close
 		frame.setVisible(true); // make it visible
 		//setting things
-		panel.setTurn(new Player("Penny Robinson","Pink", 4), 5);
+		panel.setTurn(new Player("Penny Robinson","Pink", "0", "0", 4), 5);
 		panel.setGuess( "I have no guess!");
 		panel.setGuessResult( "So you have nothing?");
 	}
