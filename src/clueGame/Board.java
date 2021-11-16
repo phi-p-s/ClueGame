@@ -33,6 +33,7 @@ public class Board extends JPanel{
 	private int rows;
 	private int roll;
 	private boolean isPlayerDone;
+	private boolean isPlayerMoved;
 	private ArrayList<Player> players;
 	private ArrayList<Player> activePlayers;
 	private ArrayList<Card> deck;
@@ -481,6 +482,7 @@ public class Board extends JPanel{
 					}	
 				}
 			}
+			activePlayers = players;
 		}
 		catch(Exception e) {
 			System.out.println(e);
@@ -535,6 +537,7 @@ public class Board extends JPanel{
 	}
 	public void handleTurn() {
 		//roll die for current player, then calculate their targets
+		isPlayerMoved = false;
 		rollDie();
 		BoardCell currentCell = getCell(currentPlayer.getRow(), currentPlayer.getColumn());
 		calcTargets(currentCell, roll);	
@@ -550,12 +553,16 @@ public class Board extends JPanel{
 		currentPlayer.setRowCol(row, column);
 		targets.clear();
 		isPlayerDone = true;
+		isPlayerMoved = true;
 		repaint();
 	}
 	
 	public void updatePlayer() {
 		int currentId = currentPlayer.getPlayerId();
-		currentPlayer = getPlayer((currentId + 1)%players.size());
+		do {
+			currentId = (currentId+1)%players.size();
+			currentPlayer = getPlayer(currentId);
+		}while(!activePlayers.contains(currentPlayer));
 		repaint();
 	}
 	
@@ -606,6 +613,11 @@ public class Board extends JPanel{
 			boolean humanPlayer = currentPlayer.isHuman();
 			if(humanPlayer){
 				//find which cell is clicked on
+				if(isPlayerMoved) {
+					ClueGame clueGame = ClueGame.getInstance();
+					clueGame.createErrorPane("Player has already moved");
+				}
+				
 				for(BoardCell currentCell: targets) {
 					int drawCol = currentCell.getDrawCol();
 					int drawRow = currentCell.getDrawRow();
@@ -615,7 +627,7 @@ public class Board extends JPanel{
 						break;
 					}
 				}
-				if(!isFound) {
+				if(!isFound && !isPlayerMoved) {
 					ClueGame clueGame = ClueGame.getInstance();
 					clueGame.createErrorPane("Please select a valid target (Cyan)");
 				}
