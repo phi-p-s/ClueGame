@@ -126,7 +126,7 @@ public class Player {
 		suggestion.add(weapon);
 		return suggestion;
 	}
-	public BoardCell selectTargets(Board board, Set<BoardCell> targetSet) {
+	public BoardCell selectTargets(Set<BoardCell> targetSet) {
 		return null;
 	}
 	public void draw(Graphics g) {

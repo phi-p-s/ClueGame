@@ -184,10 +184,11 @@ public class BoardCell{
 		
 	}
 	//draws rooms
-	public void drawRoom(Graphics g) {
+	public void drawRoom(Graphics g, boolean isTarget) {
 		Board board = Board.getInstance();
+		Graphics2D g2 = (Graphics2D) g;
 		getDrawSizes();
-		if(isRoom) {
+		if(isRoom && !isTarget) {
 			g.setColor(Color.LIGHT_GRAY);
 			g.fillRect(drawCol+border/2, drawRow+border/2, width, height);
 			if(isLabel) {
@@ -196,6 +197,13 @@ public class BoardCell{
 				g.setFont(new Font("Serif", Font.PLAIN, 15));
 				g.drawString(roomName, drawCol, drawRow);
 			}
+		}
+		else{
+			g.setColor(Color.CYAN);
+			g.fillRect(drawCol+border/2, drawRow+border/2, width, height);
+			g2.setColor(Color.BLACK);
+			g2.setStroke(new BasicStroke(border));
+			g2.drawRect(drawCol, drawRow, width, height);
 		}
 	}
 	//draws doors

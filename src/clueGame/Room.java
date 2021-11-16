@@ -22,9 +22,9 @@ public class Room {
 		adjDoors = new HashSet<BoardCell>();
 		this.name = name;
 	}
+
 	
 	//GETTERS AND SETTERS
-	
 	//Name related getters & setters. 
 	public void addDoor(BoardCell cell) {
 		adjDoors.add(cell);

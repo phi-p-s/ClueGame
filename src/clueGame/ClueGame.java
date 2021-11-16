@@ -55,6 +55,15 @@ public class ClueGame extends JFrame {
 		}
 	}
 	
+	private class ErrorPane extends JOptionPane{
+		public ErrorPane(String error) {
+			JOptionPane.showMessageDialog(rootPane, error);
+		}
+	}
+	
+	public void createErrorPane(String error) {
+		JOptionPane errorPane = new ErrorPane(error);
+	}
 
 	public static void main(String[] Args) {
 		board = Board.getInstance();

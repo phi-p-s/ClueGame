@@ -61,7 +61,8 @@ public class ComputerPlayer extends Player {
 	}
 	
 	@Override
-	public BoardCell selectTargets(Board board, Set<BoardCell> targetSet) {
+	public BoardCell selectTargets(Set<BoardCell> targetSet) {
+		Board board = Board.getInstance();
 		boolean isSeen = false;
 		String roomName;
 		//main loop checks set of targets for a room

@@ -151,13 +151,19 @@ public class GameControlPanel extends JPanel {
 		}
 	}
 	
-	//for the NEXT button, no real functionality yet
+	//for the NEXT button
 	private class NextListener implements ActionListener{
 		private Board board = Board.getInstance();
 		private ClueGame clueGame = ClueGame.getInstance();
 		public void actionPerformed(ActionEvent e) {
-			board.updatePlayer();
-			clueGame.doTurn();
+			if(board.isPlayerDone()) {
+				board.setIsPlayerDone(false);
+				board.updatePlayer();
+				clueGame.doTurn();
+			}
+			else {
+				clueGame.createErrorPane("Player has not yet finished their turn");
+			}
 		}
 	}
 	

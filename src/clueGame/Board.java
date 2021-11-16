@@ -32,6 +32,7 @@ public class Board extends JPanel{
 	private int columns;
 	private int rows;
 	private int roll;
+	private boolean isPlayerDone;
 	private ArrayList<Player> players;
 	private ArrayList<Player> activePlayers;
 	private ArrayList<Card> deck;
@@ -51,6 +52,12 @@ public class Board extends JPanel{
 	private CellListener cellListener;
 	//GETTERS AND SETTERS
 	//CONFIG
+	public void setIsPlayerDone(boolean done) {
+		isPlayerDone = done;
+	}
+	public boolean isPlayerDone() {
+		return isPlayerDone;
+	}
 	public void rollDie() {
 		Random rng = new Random();
 		roll = rng.nextInt(6) + 1;
@@ -533,11 +540,16 @@ public class Board extends JPanel{
 		calcTargets(currentCell, roll);	
 		//update board with new targets
 		repaint();
+		if(!currentPlayer.isHuman()) {
+			BoardCell moveCell = currentPlayer.selectTargets(targets);
+			movePlayer(moveCell.getRow(), moveCell.getColumn());
+		}
 	}
 	
 	public void movePlayer(int row, int column) {
 		currentPlayer.setRowCol(row, column);
 		targets.clear();
+		isPlayerDone = true;
 		repaint();
 	}
 	
@@ -553,7 +565,12 @@ public class Board extends JPanel{
 		for(int r = 0; r < rows; r++) {
 			for(int c = 0; c < columns; c++) {
 				if(grid[r][c].isRoom()) {
-					grid[r][c].drawRoom(g);
+					if(targets.contains(grid[r][c])) {
+						grid[r][c].drawRoom(g,true);
+					}
+					else {
+						grid[r][c].drawRoom(g,false);
+					}
 				}
 				else if(targets.contains(grid[r][c])){
 					grid[r][c].drawHallWall(g, true);
@@ -576,6 +593,8 @@ public class Board extends JPanel{
 		//Loop through players and get them to draw themselves
 	}
 	
+
+	
 	private class CellListener implements MouseListener{
 		@Override
 		public void mouseClicked(MouseEvent e) {
@@ -597,7 +616,8 @@ public class Board extends JPanel{
 					}
 				}
 				if(!isFound) {
-					System.err.println("Select a valid target");
+					ClueGame clueGame = ClueGame.getInstance();
+					clueGame.createErrorPane("Please select a valid target (Cyan)");
 				}
 			}
 		}

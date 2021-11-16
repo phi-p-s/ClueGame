@@ -184,14 +184,14 @@ public class GameSolutionTests {
 		board.calcTargets(board.getCell(2,6), 1);
 		Set<BoardCell> targets = board.getTargets();
 		//targets should include 2,2 1,6 2,7 3,6
-		BoardCell selectedTarget = penny.selectTargets(board, targets);
+		BoardCell selectedTarget = penny.selectTargets(targets);
 		//should select 2,2 as that is the classroom and has not been seen
 		assertEquals(selectedTarget, board.getCell(2, 2));
 		//add classroom to seen list, should select a target randomly
 		penny.updateSeen(board.getCard("Classroom"));
 		int classCounter = 0;
 		for(int i = 0; i < 400; i++) {
-			selectedTarget = penny.selectTargets(board, targets);
+			selectedTarget = penny.selectTargets(targets);
 			if(selectedTarget == board.getCell(2, 2)) {
 				classCounter++;
 			}
@@ -202,7 +202,7 @@ public class GameSolutionTests {
 		//run several tests
 		int counter = 0;
 		for(int i = 0; i < 400; i++) {
-			selectedTarget = penny.selectTargets(board, targets);
+			selectedTarget = penny.selectTargets(targets);
 			if(selectedTarget == board.getCell(9, 5)) {
 				counter++;
 			}
