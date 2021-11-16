@@ -5,11 +5,13 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BoardCell {
+public class BoardCell{
 
 	//instance variables and constructor
 	//row and column
@@ -27,6 +29,7 @@ public class BoardCell {
 	private boolean isSecretPassage;
 	private boolean isLabel;
 	private boolean isCenter;
+	private Board board;
 	//layout related names
 	private Character letter;
 	private Character secretPassage;
@@ -39,24 +42,19 @@ public class BoardCell {
 		this.adjList = new HashSet<BoardCell>();
 		this.row = row;
 		this.column = column;
+		board = Board.getInstance();
 	}
 	
 	//adds to adjacency list
 	public void addAdjacency(BoardCell cell) {
 		adjList.add(cell);
 	}
-	
-	/*
-	 * GETTERS AND SETTERS
-	 * GETTERS AND SETTERS
-	 * GETTERS AND SETTERS
-	 * GETTERS AND SETTERS
-	 * GETTERS AND SETTERS
-	 * GETTERS AND SETTERS
-	 * GETTERS AND SETTERS
-	 * GETTERS AND SETTERS
-	 */
-	
+	public int getDrawCol() {
+		return drawCol;
+	}
+	public int getDrawRow() {
+		return drawRow;
+	}
 	//GET ADJACENCY LIST
 	public Set<BoardCell> getAdjList() {
 		return adjList;
@@ -163,33 +161,27 @@ public class BoardCell {
 		drawRow = row*height;
 		border = 4;
 	}
-	public void drawHallWall(Graphics g) {
+	public void drawHallWall(Graphics g, boolean isTarget) {
 		Graphics2D g2 = (Graphics2D) g;
 		getDrawSizes();
 		//If hallway draw green
-		if(!isRoom && letter != 'X') {
+		if(!isRoom && letter != 'X' && !isTarget) {
 			g.setColor(Color.ORANGE);
 			g.fillRect(drawCol, drawRow, width, height);
-			g2.setColor(Color.BLACK);
-			g2.setStroke(new BasicStroke(border));
-			g2.drawRect(drawCol, drawRow, width, height);
-			switch(this.doorDirection) {
-			case DOWN:
-				break;
-			case LEFT:
-				break;
-			case RIGHT:
-				break;
-			case UP:
-				break;
-			default:
-				break;
-			}
+			
 		}
-		else if(letter == 'X') {
+		else if(letter == 'X' && !isTarget) {
 			g.setColor(Color.BLACK);
 			g.fillRect(drawCol, drawRow, width, height);
 		}
+		else {
+			g.setColor(Color.CYAN);
+			g.fillRect(drawCol, drawRow, width, height);
+		}
+		g2.setColor(Color.BLACK);
+		g2.setStroke(new BasicStroke(border));
+		g2.drawRect(drawCol, drawRow, width, height);
+		
 	}
 	//draws rooms
 	public void drawRoom(Graphics g) {
@@ -231,6 +223,5 @@ public class BoardCell {
 			break;
 		
 		}
-	}
-	
+	}	
 }

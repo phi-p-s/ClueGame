@@ -2,6 +2,7 @@ package clueGame;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -81,6 +82,7 @@ public class GameControlPanel extends JPanel {
 			setBorder(new TitledBorder(new EtchedBorder(), "Whose Turn?"));
 			player = new JTextField(playerName);
 			player.setEditable(false);
+			player.setFont(new Font("Serif", Font.BOLD, 14));
 			player.setBackground(Color.WHITE);
 			add(player, BorderLayout.CENTER);
 			rollLabel = new JLabel("Roll");
@@ -96,7 +98,7 @@ public class GameControlPanel extends JPanel {
 			player.setText(playerName);
 			switch(color) {
 			case("Blue"):
-				player.setBackground(Color.BLUE);
+				player.setBackground(Color.CYAN);
 				break;
 			case("Red"):
 				player.setBackground(Color.RED);
@@ -172,4 +174,5 @@ public class GameControlPanel extends JPanel {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 	}
+
 }

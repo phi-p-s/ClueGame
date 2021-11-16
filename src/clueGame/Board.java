@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import java.util.Scanner;
 import java.io.Reader;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -29,6 +31,7 @@ public class Board extends JPanel{
 	private Set<BoardCell> centers;
 	private int columns;
 	private int rows;
+	private int roll;
 	private ArrayList<Player> players;
 	private ArrayList<Card> deck;
 	private ArrayList<Card> allDeck;
@@ -36,6 +39,7 @@ public class Board extends JPanel{
 	private ArrayList<Card> weaponCards;
 	private ArrayList<Card> roomCards;
 	private ArrayList<Card> solution;
+	private Player currentPlayer;
 	//File IO
 	private File setupReader;
 	private File layoutReader;
@@ -43,8 +47,16 @@ public class Board extends JPanel{
 	private Scanner layoutIn;
 	private Scanner layoutIn2;
 	private String[][] layoutGrid;
+	private CellListener cellListener;
 	//GETTERS AND SETTERS
 	//CONFIG
+	public void rollDie() {
+		Random rng = new Random();
+		roll = rng.nextInt(6) + 1;
+	}
+	public int getRoll() {
+		return roll;
+	}
 	public ArrayList<Player> getPlayers() {
 		return players;
 	}
@@ -122,7 +134,9 @@ public class Board extends JPanel{
 	public String[][] getLayoutGrid(){
 		return layoutGrid;
 	}
-
+	public CellListener getCellListener() {
+		return cellListener;
+	}
 	
 	//constructor
 	private static Board theInstance = new Board();
@@ -144,9 +158,8 @@ public class Board extends JPanel{
 		allDeck = new ArrayList<Card>();
 		loadSetupConfig();
 		loadLayoutConfig();
-			
 		grid = new BoardCell[rows][columns];
-		
+		addMouseListener(new CellListener());
 		//creates a grid of cells, size r x c
 		createGrid();
 		createDoorLists();
@@ -497,10 +510,22 @@ public class Board extends JPanel{
 			System.out.println(e);
 		}
 	}
-	public void setPlayerStart() {
-		for(Player player: players) {
-			
-		}
+	public void setCurrentPlayer(Player currentPlayer) {
+		this.currentPlayer = currentPlayer;
+	}
+	public void handleTurn() {
+		//roll die for current player, then calculate their targets
+		rollDie();
+		BoardCell currentCell = getCell(currentPlayer.getRow(), currentPlayer.getColumn());
+		calcTargets(currentCell, roll);	
+		//update board with new targets
+		repaint();
+	}
+	
+	public void movePlayer(int row, int column) {
+		currentPlayer.setRowCol(row, column);
+		targets.clear();
+		repaint();
 	}
 	@Override
 	public void paintComponent(Graphics g) {
@@ -510,8 +535,11 @@ public class Board extends JPanel{
 				if(grid[r][c].isRoom()) {
 					grid[r][c].drawRoom(g);
 				}
+				else if(targets.contains(grid[r][c])){
+					grid[r][c].drawHallWall(g, true);
+				}
 				else {
-					grid[r][c].drawHallWall(g);
+					grid[r][c].drawHallWall(g, false);
 				}
 			}
 		}
@@ -526,5 +554,49 @@ public class Board extends JPanel{
 			player.draw(g);
 		}
 		//Loop through players and get them to draw themselves
+	}
+	
+	private class CellListener implements MouseListener{
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			int mouseCol = e.getX();
+			int mouseRow = e.getY();
+			int width = getWidth()/columns;
+			int height = getHeight()/rows;
+			boolean isFound = false;
+			//find which cell is clicked on
+			for(BoardCell currentCell: targets) {
+				int drawCol = currentCell.getDrawCol();
+				int drawRow = currentCell.getDrawRow();
+				if((mouseCol > drawCol && mouseCol < (drawCol + width) && mouseRow > drawRow && mouseRow < (drawRow + height))) {
+					isFound = true;
+					movePlayer(currentCell.getRow(), currentCell.getColumn());
+					break;
+				}
+			}
+			if(!isFound) {
+				System.err.println("Select a valid target");
+			}
+		}
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 }
