@@ -33,6 +33,7 @@ public class Board extends JPanel{
 	private int rows;
 	private int roll;
 	private ArrayList<Player> players;
+	private ArrayList<Player> activePlayers;
 	private ArrayList<Card> deck;
 	private ArrayList<Card> allDeck;
 	private ArrayList<Card> playerCards;
@@ -68,6 +69,17 @@ public class Board extends JPanel{
 		}
 		//in theory should work
 		return null;
+	}
+	public Player getPlayer(int id) {
+		for(Player player: players) {
+			if(player.getPlayerId() == id) {
+				return player;
+			}
+		}
+		return null;
+	}
+	public Player getCurrentPlayer() {
+		return currentPlayer;
 	}
 	public ArrayList<Card> getDeck(){
 		return deck;
@@ -156,6 +168,7 @@ public class Board extends JPanel{
 		playerCards = new ArrayList<Card>();
 		weaponCards = new ArrayList<Card>();
 		allDeck = new ArrayList<Card>();
+		activePlayers = new ArrayList<Player>();
 		loadSetupConfig();
 		loadLayoutConfig();
 		grid = new BoardCell[rows][columns];
@@ -527,6 +540,13 @@ public class Board extends JPanel{
 		targets.clear();
 		repaint();
 	}
+	
+	public void updatePlayer() {
+		int currentId = currentPlayer.getPlayerId();
+		currentPlayer = getPlayer((currentId + 1)%players.size());
+		repaint();
+	}
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -564,18 +584,21 @@ public class Board extends JPanel{
 			int width = getWidth()/columns;
 			int height = getHeight()/rows;
 			boolean isFound = false;
-			//find which cell is clicked on
-			for(BoardCell currentCell: targets) {
-				int drawCol = currentCell.getDrawCol();
-				int drawRow = currentCell.getDrawRow();
-				if((mouseCol > drawCol && mouseCol < (drawCol + width) && mouseRow > drawRow && mouseRow < (drawRow + height))) {
-					isFound = true;
-					movePlayer(currentCell.getRow(), currentCell.getColumn());
-					break;
+			boolean humanPlayer = currentPlayer.isHuman();
+			if(humanPlayer){
+				//find which cell is clicked on
+				for(BoardCell currentCell: targets) {
+					int drawCol = currentCell.getDrawCol();
+					int drawRow = currentCell.getDrawRow();
+					if((mouseCol > drawCol && mouseCol < (drawCol + width) && mouseRow > drawRow && mouseRow < (drawRow + height))) {
+						isFound = true;
+						movePlayer(currentCell.getRow(), currentCell.getColumn());
+						break;
+					}
 				}
-			}
-			if(!isFound) {
-				System.err.println("Select a valid target");
+				if(!isFound) {
+					System.err.println("Select a valid target");
+				}
 			}
 		}
 		@Override

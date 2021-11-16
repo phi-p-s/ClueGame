@@ -14,7 +14,11 @@ public class ClueGame extends JFrame {
 	private StartSplash startSplash;
 	private static Board board;
 	//Constructor for the main frame
-	public ClueGame(Player startPlayer) {
+	private static ClueGame theInstance = new ClueGame();
+	private ClueGame() {
+		super();
+	}
+	public void initialize(Player startPlayer) {
 		Board board = Board.getInstance();
 		cardPanel = new CardPanel(startPlayer);
 		gameControlPanel = new GameControlPanel();
@@ -26,6 +30,15 @@ public class ClueGame extends JFrame {
 		add(gameControlPanel, BorderLayout.SOUTH);
 		add(cardPanel, BorderLayout.EAST);
 		add(board);
+	}
+	
+	public static ClueGame getInstance() {
+		return theInstance;
+	}
+	
+	public void doTurn() {
+		board.handleTurn();
+		gameControlPanel.setTurn(board.getCurrentPlayer(), board.getRoll());
 	}
 	
 	public GameControlPanel getControlPanel() {
@@ -42,17 +55,18 @@ public class ClueGame extends JFrame {
 		}
 	}
 	
+
 	public static void main(String[] Args) {
 		board = Board.getInstance();
 		// set the file names to use my config files
 		board.setConfigFiles("data\\ClueLayout.csv", "data\\ClueSetup.txt");		
 		// Initialize will load config files 
 		board.initialize();
-		ClueGame frame = new ClueGame(board.getPlayer("The Robot"));
+		ClueGame clueGame = ClueGame.getInstance();
 		Player currentPlayer = board.getPlayer("The Robot");
-		//loop while game has not ended\
+		clueGame.initialize(currentPlayer);
+		//loop while game has not ended
 		board.setCurrentPlayer(currentPlayer);
-		board.handleTurn();
-		frame.getControlPanel().setTurn(currentPlayer, board.getRoll());
+		clueGame.doTurn();
 	}
 }

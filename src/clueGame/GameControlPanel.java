@@ -29,6 +29,7 @@ public class GameControlPanel extends JPanel {
 	/**
 	 * Constructor for the panel, it does 90% of the work
 	 */
+	
 	public GameControlPanel()  {
 		this.currentPlayer = new Player("", "White", "0", "0", 0);
 		buttons = new ButtonPanel();
@@ -152,8 +153,11 @@ public class GameControlPanel extends JPanel {
 	
 	//for the NEXT button, no real functionality yet
 	private class NextListener implements ActionListener{
+		private Board board = Board.getInstance();
+		private ClueGame clueGame = ClueGame.getInstance();
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("easibhasegfr");
+			board.updatePlayer();
+			clueGame.doTurn();
 		}
 	}
 	
