@@ -69,9 +69,19 @@ public class ClueGame extends JFrame {
 		}
 	}
 	
+	private class EndSplash extends JOptionPane {
+		public EndSplash(String message) {
+			super();
+			JOptionPane.showMessageDialog(rootPane, message);
+		}
+	}
 	
 	public void createErrorPane(String error) {
 		JOptionPane errorPane = new ErrorPane(error);
+	}
+	
+	public void createEndSplash(String message) {
+		JOptionPane endSplash = new EndSplash(message);
 	}
 	
 	public static void main(String[] Args) {

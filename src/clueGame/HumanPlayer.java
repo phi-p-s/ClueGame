@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class HumanPlayer extends Player {
 
-	private ArrayList<Card> suggestion = new ArrayList<Card>();
 	
 	public HumanPlayer(String playerName, String color, String column, String row, int playerId) {
 		super(playerName, color, column, row, playerId);
@@ -19,11 +18,18 @@ public class HumanPlayer extends Player {
 	@Override
 	public ArrayList<Card> createSuggestion(Room room){
 		ClueGame clueGame = ClueGame.getInstance();
-		suggestion.clear();
 		ArrayList<Card> unseenPeople = makeUnseenPeople();
 		ArrayList<Card> unseenWeapons = makeUnseenWeapons();
 		SuggestionFrame suggestionFrame = new SuggestionFrame(room, unseenPeople, unseenWeapons);
-		return suggestion;
+		return null;
+	}
+	
+	@Override
+	public ArrayList<Card> createAccusation(){
+		ClueGame clueGame = ClueGame.getInstance();
+		Board board = Board.getInstance();
+		AccusationFrame accusationFrame = new AccusationFrame(board.getRoomCards(), board.getPlayerCards(), board.getWeaponCards());
+		return null;
 	}
 	public ArrayList<Card> makeUnseenPeople(){
 		Board board = Board.getInstance();

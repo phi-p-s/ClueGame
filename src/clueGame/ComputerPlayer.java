@@ -7,6 +7,7 @@ import java.util.Set;
 
 public class ComputerPlayer extends Player {
 	
+	
 	public ComputerPlayer(String playerName, String color, String column, String row, int playerId) {
 		super(playerName, color, column, row, playerId);
 		// TODO Auto-generated constructor stub
@@ -61,6 +62,26 @@ public class ComputerPlayer extends Player {
 		return suggestion;
 	}
 	
+	public ArrayList<Card> createAccusation(){
+		Board board = Board.getInstance();
+		ArrayList<Card> accusation = new ArrayList<Card>();
+		for(Card card: board.getPlayerCards()) {
+			if(!seenCards.contains(card)) {
+				accusation.add(card);
+			}
+		}
+		for(Card card: board.getRoomCards()) {
+			if(!seenCards.contains(card)) {
+				accusation.add(card);
+			}
+		}
+		for(Card card: board.getWeaponCards()) {
+			if(!seenCards.contains(card)) {
+				accusation.add(card);
+			}
+		}
+		return accusation;
+	}
 	@Override
 	public BoardCell selectTargets(Set<BoardCell> targetSet) {
 		Board board = Board.getInstance();
@@ -94,5 +115,6 @@ public class ComputerPlayer extends Player {
 		}
 		return null;
 	}
+	
 	
 }

@@ -68,6 +68,9 @@ public class Player {
 		return hand;
 	}
 	
+	public Set<Card> getSeenCards(){
+		return seenCards;
+	}
 	public int getPlayerId() {
 		return playerId;
 	}
@@ -126,6 +129,10 @@ public class Player {
 		suggestion.add(weapon);
 		return suggestion;
 	}
+	
+	public ArrayList<Card> createAccusation(){
+		return null;
+	}
 	public BoardCell selectTargets(Set<BoardCell> targetSet) {
 		return null;
 	}
@@ -147,5 +154,6 @@ public class Player {
 		g2.setColor(Color.DARK_GRAY);
 		g.drawOval(drawCol+(2*border/3), drawRow+(border/2), width-(border), height-(border));
 	}
+
 }
 	

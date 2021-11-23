@@ -59,6 +59,9 @@ public class Board extends JPanel{
 	public boolean isPlayerDone() {
 		return isPlayerDone;
 	}
+	public boolean isPlayerMoved() {
+		return isPlayerMoved;
+	}
 	public void rollDie() {
 		Random rng = new Random();
 		roll = rng.nextInt(6) + 1;
@@ -383,6 +386,19 @@ public class Board extends JPanel{
 		deck.remove(weaponCards.get(weaponInt));
 	}
 	public boolean checkSolution(Card player, Card room, Card weapon) {
+		ClueGame clueGame = ClueGame.getInstance();
+		if(solution.get(0) == player && solution.get(1) == room && solution.get(2) == weapon) {
+			clueGame.createEndSplash(currentPlayer.getPlayerName() + ", You are winner!\n" + "The solution was: " + solution.get(0).getName() + " in the " + solution.get(1).getName() + " with the " + solution.get(2).getName());
+			clueGame.setVisible(false);
+		}
+		else if(currentPlayer.isHuman()){
+			clueGame.createEndSplash(currentPlayer.getPlayerName() + ", that is not the correct solution.\nGAME OVER\n" + "The solution was: " + solution.get(0).getName() + " in the " + solution.get(1).getName() + " with the " + solution.get(2).getName());
+			clueGame.setVisible(false);
+		}
+		else {
+			//this should never happen
+			clueGame.createEndSplash(currentPlayer.getPlayerName() + ", That is not the solution lmao");
+		}
 		return (solution.get(0) == player && solution.get(1) == room && solution.get(2) == weapon);
 	}
 	public void dealHands() {
@@ -422,6 +438,7 @@ public class Board extends JPanel{
 				currentPlayer.updateSeen(disproveCard);
 				if(currentPlayer.isHuman()) {
 					clueGame.getCardPanel().addCard(disproveCard);
+					clueGame.getCardPanel().repaint();
 					clueGame.getControlPanel().setGuessResult("Card Disproved: " + disproveCard.getName());
 				}
 				else {
@@ -561,6 +578,11 @@ public class Board extends JPanel{
 		//update board with new targets
 		repaint();
 		if(!currentPlayer.isHuman()) {
+			int remainingCards = allDeck.size() - currentPlayer.getSeenCards().size();
+			if(remainingCards == 3) {
+				ArrayList<Card> accusation = currentPlayer.createAccusation();
+				checkSolution(accusation.get(0), accusation.get(1), accusation.get(2));
+			}
 			BoardCell moveCell = currentPlayer.selectTargets(targets);
 			movePlayer(moveCell.getRow(), moveCell.getColumn());
 		}

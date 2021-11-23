@@ -147,8 +147,16 @@ public class GameControlPanel extends JPanel {
 	
 	//for the accusation button, no real functionality yet
 	private class AccusationListener implements ActionListener {
+		private Board board = Board.getInstance();
+		private ClueGame clueGame = ClueGame.getInstance();
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("hi");
+			Player currentPlayer = board.getCurrentPlayer();
+			if(!board.isPlayerMoved() && currentPlayer.isHuman()) {
+				currentPlayer.createAccusation();
+			}
+			else {
+				clueGame.createErrorPane("You can only make an accusation at the beginning of your turn");
+			}
 		}
 	}
 	
