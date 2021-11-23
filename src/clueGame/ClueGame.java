@@ -1,12 +1,18 @@
 package clueGame;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 public class ClueGame extends JFrame {
 	private CardPanel cardPanel;
@@ -51,20 +57,23 @@ public class ClueGame extends JFrame {
 	
 	private class StartSplash extends JOptionPane {
 		public StartSplash(String message) {
+			super();
 			JOptionPane.showMessageDialog(rootPane, message);
 		}
 	}
 	
 	private class ErrorPane extends JOptionPane{
 		public ErrorPane(String error) {
+			super();
 			JOptionPane.showMessageDialog(rootPane, error);
 		}
 	}
 	
+	
 	public void createErrorPane(String error) {
 		JOptionPane errorPane = new ErrorPane(error);
 	}
-
+	
 	public static void main(String[] Args) {
 		board = Board.getInstance();
 		// set the file names to use my config files
@@ -74,8 +83,11 @@ public class ClueGame extends JFrame {
 		ClueGame clueGame = ClueGame.getInstance();
 		Player currentPlayer = board.getPlayer("The Robot");
 		clueGame.initialize(currentPlayer);
+		clueGame.getControlPanel().setGuessResult("----------------- No suggestion has been made ------------------");
+		clueGame.getControlPanel().setGuess("------------------ No suggestion has been made ------------------");
 		//loop while game has not ended
 		board.setCurrentPlayer(currentPlayer);
 		clueGame.doTurn();
 	}
+
 }

@@ -404,13 +404,24 @@ public class Board extends JPanel{
 		}
 	}
 	public Card handleSuggestion(Player currentPlayer, ArrayList<Card> suggestion) {
+		ClueGame clueGame = ClueGame.getInstance();
 		int currentId = currentPlayer.getPlayerId();
 		Player disprovePlayer;
+		String personStr = suggestion.get(0).getName();
+		String roomStr = suggestion.get(1).getName();
+		String weaponStr = suggestion.get(2).getName();
 		for(int i = currentId+1; i < players.size()+currentId; i++) {
 			int j = (i)% players.size();
 			disprovePlayer = players.get(j);
 			Card disproveCard = disprovePlayer.disproveSuggestion(suggestion);
 			if(!Objects.isNull(disproveCard)) {
+				System.out.println("Yo");
+				for(Player player: players) {
+					player.updateSeen(disproveCard);
+				}
+				String combinedStr = personStr + " + " + roomStr + " + " + weaponStr;
+				clueGame.getControlPanel().setGuess(combinedStr);
+				clueGame.getCardPanel().addCard(disproveCard);
 				return disproveCard;
 			}
 		}
@@ -555,6 +566,12 @@ public class Board extends JPanel{
 		isPlayerDone = true;
 		isPlayerMoved = true;
 		repaint();
+		if(grid[row][column].isRoom()) {
+			ArrayList<Card> suggestion = currentPlayer.createSuggestion(getRoom(grid[row][column]));
+			if(!currentPlayer.isHuman()) {
+				handleSuggestion(currentPlayer, suggestion);
+			}
+		}
 	}
 	
 	public void updatePlayer() {

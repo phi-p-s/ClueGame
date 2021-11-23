@@ -96,7 +96,7 @@ public class Player {
 	public Card disproveSuggestion(ArrayList<Card> suggestion) {
 		for(Card suggestionCard: suggestion) {
 			for(Card disproveCard: hand) {
-				if(disproveCard.equals(suggestionCard)){
+				if(disproveCard.getName().equals(suggestionCard.getName())){
 					return disproveCard;
 				}
 			}
@@ -115,7 +115,7 @@ public class Player {
 	public void resetSeen() {
 		seenCards.clear();
 	}
-	public ArrayList<Card> createSuggestion(Board board, Room room){
+	public ArrayList<Card> createSuggestion(Room room){
 		return null;
 	}
 	//hard set solution for tests
@@ -146,7 +146,6 @@ public class Player {
 		g2.setStroke(new BasicStroke(border/2));
 		g2.setColor(Color.DARK_GRAY);
 		g.drawOval(drawCol+(2*border/3), drawRow+(border/2), width-(border), height-(border));
-		
 	}
 }
 	

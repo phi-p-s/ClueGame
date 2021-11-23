@@ -13,7 +13,8 @@ public class ComputerPlayer extends Player {
 	}
 	
 	@Override
-	public ArrayList<Card> createSuggestion(Board board, Room room){
+	public ArrayList<Card> createSuggestion(Room room){
+		Board board = Board.getInstance();
 		ArrayList<Card> playerCards = board.getPlayerCards();
 		ArrayList<Card> weaponCards = board.getWeaponCards();
 		ArrayList<Card> roomCards = board.getRoomCards();

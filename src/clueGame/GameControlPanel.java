@@ -62,6 +62,7 @@ public class GameControlPanel extends JPanel {
 		public GuessPanel(String text, String name) {
 			field = new JTextField(text);
 			setBorder(new TitledBorder(new EtchedBorder(), name));
+			field.setColumns(35);
 			field.setEditable(false);
 			add(field, BorderLayout.CENTER);
 		}

@@ -145,7 +145,7 @@ public class GameSolutionTests {
 			}
 		}
 		//test that robot, bridge, and crowbar are the cards for the suggestion
-		ArrayList<Card> suggestion = penny.createSuggestion(board, board.getRoom('B'));
+		ArrayList<Card> suggestion = penny.createSuggestion(board.getRoom('B'));
 		assertTrue(robot.getName().equals(suggestion.get(0).getName()));
 		assertTrue(bridge.getName().equals(suggestion.get(1).getName()));
 		assertTrue(crowbar.getName().equals(suggestion.get(2).getName()));
@@ -166,7 +166,7 @@ public class GameSolutionTests {
 		int crowbarCount = 0;
 		//check that it is randomly selecting a card
 		for(int i = 0; i < 200; i++) {
-			suggestion = penny.createSuggestion(board, board.getRoom('Y'));
+			suggestion = penny.createSuggestion(board.getRoom('Y'));
 			if(suggestion.get(0).getName().equals(robot.getName())) {
 				robotCount++;
 			}
