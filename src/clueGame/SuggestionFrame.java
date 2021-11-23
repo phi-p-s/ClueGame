@@ -79,18 +79,15 @@ public class SuggestionFrame extends JFrame{
 			String weaponStr = (String) comboWeapon.getSelectedItem();
 			Card weaponCard = board.getCard(weaponStr);
 			Room room = getSuggestionPanel().getCurrentRoom();
-			String roomStr = room.getName();
 			Card roomCard = board.getCard(room.getName());
 			ArrayList<Card> suggestion = new ArrayList<Card>();
 			suggestion.add(personCard);
 			suggestion.add(weaponCard);
 			suggestion.add(roomCard);
-			String combinedStr = personStr + " + " + weaponStr + " + " + roomStr;
-			clueGame.getControlPanel().setGuess(combinedStr);
-			Card disproveCard = board.handleSuggestion(board.getCurrentPlayer(), suggestion);
-			String cardName = disproveCard.getName();
-			clueGame.getControlPanel().setGuessResult(cardName);
-			
+			Player suggestedPlayer = board.getPlayer(personStr);
+			suggestedPlayer.setRowCol(board.getCurrentPlayer().getRow(), board.getCurrentPlayer().getColumn());
+			board.repaint();
+			board.handleSuggestion(board.getCurrentPlayer(), suggestion);			
 			board.setIsPlayerDone(true);
 			setVisible(false);
 		} 

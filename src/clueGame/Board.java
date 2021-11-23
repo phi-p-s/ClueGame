@@ -410,21 +410,27 @@ public class Board extends JPanel{
 		String personStr = suggestion.get(0).getName();
 		String roomStr = suggestion.get(1).getName();
 		String weaponStr = suggestion.get(2).getName();
+		String combinedStr = personStr + " + " + roomStr + " + " + weaponStr;
+		clueGame.getControlPanel().setGuess(combinedStr);
+		Player suggestedPlayer = getPlayer(personStr);
+		suggestedPlayer.setRowCol(currentPlayer.getRow(), currentPlayer.getColumn());
 		for(int i = currentId+1; i < players.size()+currentId; i++) {
 			int j = (i)% players.size();
 			disprovePlayer = players.get(j);
 			Card disproveCard = disprovePlayer.disproveSuggestion(suggestion);
 			if(!Objects.isNull(disproveCard)) {
-				System.out.println("Yo");
-				for(Player player: players) {
-					player.updateSeen(disproveCard);
+				currentPlayer.updateSeen(disproveCard);
+				if(currentPlayer.isHuman()) {
+					clueGame.getCardPanel().addCard(disproveCard);
+					clueGame.getControlPanel().setGuessResult("Card Disproved: " + disproveCard.getName());
 				}
-				String combinedStr = personStr + " + " + roomStr + " + " + weaponStr;
-				clueGame.getControlPanel().setGuess(combinedStr);
-				clueGame.getCardPanel().addCard(disproveCard);
+				else {
+					clueGame.getControlPanel().setGuessResult("Suggestion Disproved");
+				}
 				return disproveCard;
 			}
 		}
+		clueGame.getControlPanel().setGuessResult("Suggestion was not Disproved");
 		return null;
 	}
 	//reset deck in case it gets emptied for some reason and we need it to not be empty
